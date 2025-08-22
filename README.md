@@ -4,6 +4,8 @@ A full-stack pizza ordering application:
 - Backend: FastAPI + MongoDB with JWT auth middleware, robust validation, and test coverage.
 - Frontend: React (TypeScript) + Chakra UI + React-Intl with strong type safety and tests.
 
+You can view the app by visting https://user-snack.vercel.app/. To view all orders visit https://user-snack.vercel.app/admin/orders
+
 ## What I Implemented
 
 - Users API: endpoints to create, update, and delete users.
