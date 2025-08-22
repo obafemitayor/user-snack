@@ -1,0 +1,39 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/usersnap_pizza
+      - JWT_SECRET_KEY=your-secret-key-change-in-production
+      - FIREBASE_CREDENTIALS_PATH=/app/firebase-service-account.json
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  test:
+    build: .
+    volumes:
+      - ./:/app
+    environment:
+      - MONGODB_URL=mongodb://mongo:27017/usersnap_pizza_test
+      - JWT_SECRET_KEY=test-secret-key-for-testing
+      - FIREBASE_CREDENTIALS_PATH=/app/firebase-service-account.json
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - mongo
+    command: pytest -v
+
+volumes:
+  mongo_data:

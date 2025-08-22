@@ -1,0 +1,80 @@
+export const messages = {
+  // Pizza Menu Messages
+  'pizza.menu.title': '🍕 Pizza Menu',
+  'pizza.menu.subtitle': 'Choose from our delicious selection of pizzas',
+  'pizza.menu.loading': 'Loading pizzas...',
+  'pizza.menu.noItems': 'No pizzas available at the moment',
+  'pizza.menu.viewDetails': 'View Details & Order',
+  'pizza.menu.ingredients': 'Ingredients: {ingredients}',
+  'pizza.menu.price': '${price}',
+
+  // Pizza Details Messages
+  'pizza.details.title': 'Pizza Details',
+  'pizza.details.loading': 'Loading pizza details...',
+  'pizza.details.notFound': 'Pizza not found',
+  'pizza.details.backToMenu': 'Back to Menu',
+  'pizza.details.price': '${price}',
+  'pizza.details.addExtras': 'Add Extras',
+  'pizza.details.selectedExtras': 'Selected Extras:',
+  'pizza.details.total': 'Total: {total}',
+
+  // Order Form Messages
+  'order.form.title': 'Place Your Order',
+  'order.form.customerName': 'Customer Name',
+  'order.form.email': 'Email',
+  'order.form.phone': 'Phone Number',
+  'order.form.address': 'Delivery Address',
+  'order.form.quantity': 'Quantity',
+  'order.form.placeOrder': 'Place Order',
+  'order.form.add': 'Add',
+  'order.form.selectExtra': 'Select an extra',
+
+  // Orders List Messages
+  'orders.list.title': '📋 Orders Management',
+  'orders.list.subtitle': 'Manage and track all customer orders',
+  'orders.list.loading': 'Loading orders...',
+  'orders.list.noOrders': 'No orders found',
+  'orders.list.viewDetails': 'View Details',
+  'orders.list.filterAll': 'All Orders',
+  'orders.list.filterPending': 'Pending',
+  'orders.list.filterConfirmed': 'Confirmed',
+  'orders.list.filterPreparing': 'Preparing',
+  'orders.list.filterDelivering': 'Out for Delivery',
+  'orders.list.filterDelivered': 'Delivered',
+  'orders.list.filterCancelled': 'Cancelled',
+
+  // Order Details Messages
+  'orders.details.title': 'Order Details',
+  'orders.details.loading': 'Loading order details...',
+  'orders.details.notFound': 'Order not found',
+  'orders.details.backToOrders': 'Back to Orders',
+  'orders.details.customerInfo': 'Customer Information',
+  'orders.details.orderInfo': 'Order Information',
+  'orders.details.items': 'Order Items',
+  'orders.details.updateStatus': 'Update Status',
+  'orders.details.confirmOrder': 'Confirm Order',
+  'orders.details.subtotal': 'Subtotal: ${amount}',
+  'orders.details.quantity': 'Quantity: {quantity}',
+  'orders.details.price': 'Price: ${price} each',
+
+  // Status Messages
+  'status.pending': 'Pending',
+  'status.confirmed': 'Confirmed',
+  'status.preparing': 'Preparing',
+  'status.outForDelivery': 'Out for Delivery',
+  'status.delivered': 'Delivered',
+  'status.cancelled': 'Cancelled',
+
+  // Common Messages
+  'common.loading': 'Loading...',
+  'common.error': 'An error occurred',
+  'common.success': 'Success',
+  'common.cancel': 'Cancel',
+  'common.save': 'Save',
+  'common.delete': 'Delete',
+  'common.edit': 'Edit',
+  'common.back': 'Back',
+  'common.next': 'Next',
+  'common.previous': 'Previous',
+  'common.page': 'Page {page} of {total}',
+};
