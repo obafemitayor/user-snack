@@ -182,7 +182,7 @@ const OrderDetails: React.FC = () => {
         <Button
           variant="ghost"
           alignSelf="flex-start"
-          onClick={() => navigate('/orders')}
+          onClick={() => navigate('/admin/orders')}
         >
           {intl.formatMessage(messages.backToOrders)}
         </Button>
