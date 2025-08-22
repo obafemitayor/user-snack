@@ -17,6 +17,7 @@ app = FastAPI(title="UserSnack API")
 # CORS middleware for cross-site request protection
 app.add_middleware(
     CORSMiddleware,
+    allow_origins=["*"],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
