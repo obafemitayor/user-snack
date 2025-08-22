@@ -26,7 +26,13 @@ class OrderItemRequest(BaseModel):
 class CreateOrderRequest(BaseModel):
     customer_name: str = Field(..., min_length=1, max_length=100, description="Customer name")
     customer_email: str = Field(..., pattern=r'^[^@]+@[^@]+\.[^@]+$', description="Customer email")
-    customer_phone: Optional[str] = Field(None, min_length=9, max_length=20, description="Customer phone")
+    customer_phone: Optional[str] = Field(
+        None,
+        min_length=10,
+        max_length=20,
+        pattern=r'^\d+$',
+        description="Customer phone (digits only)",
+    )
     customer_address: str = Field(..., min_length=1, max_length=500, description="Customer address")
     items: List[OrderItemRequest] = Field(..., min_length=1, description="Order items")
 

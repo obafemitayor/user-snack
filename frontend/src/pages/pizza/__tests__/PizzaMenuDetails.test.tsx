@@ -71,6 +71,7 @@ jest.mock('@chakra-ui/react', () => {
     Badge: TextPass,
     Card: Pass,
     CardBody: Pass,
+    FormErrorMessage: TextPass,
     useToast,
     Spinner: () => React.createElement('div', { role: 'status' }),
     Center: Pass,

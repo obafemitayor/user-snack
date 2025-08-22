@@ -18,11 +18,20 @@ export interface OrderFormData {
   selected_extras: string[];
 }
 
+export interface OrderFormErrors {
+  customer_name?: string;
+  customer_email?: string;
+  customer_phone?: string;
+  customer_address?: string;
+  quantity?: string;
+}
+
 interface OrderContextType {
   // State
   orderForm: OrderFormData;
   selectedExtraId: string;
   orderLoading: boolean;
+  orderErrors: OrderFormErrors;
   
   // Actions
   handleInputChange: (field: keyof OrderFormData, value: string | number) => void;
@@ -62,12 +71,82 @@ export const OrderProvider: React.FC<OrderProviderProps> = ({ children }) => {
 
   const [selectedExtraId, setSelectedExtraId] = useState<string>('');
   const [orderLoading, setOrderLoading] = useState<boolean>(false);
+  const [orderErrors, setOrderErrors] = useState<OrderFormErrors>({});
+
+  const validateName = (name: string): string | undefined => {
+    if (!name || name.trim().length === 0) {
+      return 'Name is required';
+    }
+    if (name.length > 100) {
+      return 'Name must be at most 100 characters';
+    }
+    return undefined;
+  };
+
+  const validateEmail = (emailRaw: string): string | undefined => {
+    const email = emailRaw.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+      return 'Email is required';
+    }
+    if (!emailRegex.test(email)) {
+      return 'Enter a valid email address';
+    }
+    return undefined;
+  };
+
+  const validatePhone = (phoneRaw?: string): string | undefined => {
+    const phone = (phoneRaw || '').trim();
+    if (!phone) {
+      return 'Phone number is required';
+    };
+    const phoneDigitsOnly = /^\d{10,20}$/;
+    if (!phoneDigitsOnly.test(phone)) {
+      return 'Phone number must be 10 to 20 digits';
+    }
+    return undefined;
+  };
+
+  const validate = (data: OrderFormData): OrderFormErrors => {
+    const errors: OrderFormErrors = {};
+    const nameErr = validateName(data.customer_name);
+    if (nameErr) {
+      errors.customer_name = nameErr;
+    }
+    const emailErr = validateEmail(data.customer_email);
+    if (emailErr) {
+      errors.customer_email = emailErr;
+    }
+    if (!data.customer_address || data.customer_address.trim().length === 0) {
+      errors.customer_address = 'Address is required';
+    }
+    if (!data.quantity || data.quantity < 1) {
+      errors.quantity = 'Quantity must be at least 1';
+    }
+    const phoneErr = validatePhone(data.customer_phone);
+    if (phoneErr) {
+      errors.customer_phone = phoneErr;
+    }
+    return errors;
+  };
 
   const handleInputChange = (field: keyof OrderFormData, value: string | number) => {
-    setOrderForm(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setOrderForm(prev => {
+      const next = { ...prev, [field]: value } as OrderFormData;
+      const nextErrors = validate(next);
+      const errorFieldMap: Array<keyof OrderFormErrors> = [
+        'customer_name',
+        'customer_email',
+        'customer_phone',
+        'customer_address',
+        'quantity',
+      ];
+      if (errorFieldMap.includes(field as keyof OrderFormErrors)) {
+        const typedField = field as keyof OrderFormErrors;
+        setOrderErrors(prevErrs => ({ ...prevErrs, [typedField]: nextErrors[typedField] }));
+      }
+      return next;
+    });
   };
 
   const handleAddExtra = () => {
@@ -88,10 +167,12 @@ export const OrderProvider: React.FC<OrderProviderProps> = ({ children }) => {
   };
 
   const handlePlaceOrder = async (pizza: any, extras: Extra[], calculateTotal: () => number) => {
-    if (!pizza || !orderForm.customer_name || !orderForm.customer_email || !orderForm.customer_address) {
+    const errors = validate(orderForm);
+    setOrderErrors(errors);
+    if (!pizza || Object.keys(errors).length > 0) {
       toast({
-        title: 'Missing Information',
-        description: 'Please fill in all required fields (name, email, and address)',
+        title: 'Invalid form',
+        description: 'Please correct the highlighted fields.',
         status: 'warning',
         duration: 3000,
         isClosable: true,
@@ -152,6 +233,7 @@ export const OrderProvider: React.FC<OrderProviderProps> = ({ children }) => {
       quantity: 1,
       selected_extras: []
     });
+    setOrderErrors({});
     setSelectedExtraId('');
     setOrderLoading(false);
   };
@@ -160,6 +242,7 @@ export const OrderProvider: React.FC<OrderProviderProps> = ({ children }) => {
     orderForm,
     selectedExtraId,
     orderLoading,
+    orderErrors,
     handleInputChange,
     setSelectedExtraId,
     handleAddExtra,

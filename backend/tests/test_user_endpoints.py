@@ -264,7 +264,7 @@ async def test_create_user_success(auth_client: AsyncClient):
         "name": "New User",
         "email": "newuser@example.com",
         "address": "New Address",
-        "phone": "123-456-7890"
+        "phone": "1234567890"
     }
     
     response = await auth_client.post("/users/", json=user_data)
@@ -290,13 +290,13 @@ async def test_update_user_success(auth_client: AsyncClient):
     user_id = create_response.json()["_id"]
     
     # Update user
-    update_data = {"name": "Updated User", "phone": "987-654-3210"}
+    update_data = {"name": "Updated User", "phone": "9876543210"}
     response = await auth_client.put(f"/users/{user_id}", json=update_data)
     assert response.status_code == 200
     
     data = response.json()
     assert data["name"] == "Updated User"
-    assert data["phone"] == "987-654-3210"
+    assert data["phone"] == "9876543210"
     assert data["email"] == user_data["email"]  # Should remain unchanged
 
 @pytest.mark.asyncio

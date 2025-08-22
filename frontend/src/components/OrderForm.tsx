@@ -9,6 +9,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  FormErrorMessage,
   Textarea,
   NumberInput,
   NumberInputField,
@@ -48,6 +49,7 @@ const OrderForm: React.FC<OrderFormProps> = ({
     orderForm,
     selectedExtraId,
     orderLoading,
+    orderErrors,
     handleInputChange,
     setSelectedExtraId,
     handleAddExtra,
@@ -64,7 +66,7 @@ const OrderForm: React.FC<OrderFormProps> = ({
         
         <VStack spacing={6} align="stretch">
           <HStack spacing={4}>
-            <FormControl isRequired>
+            <FormControl isRequired isInvalid={!!orderErrors.customer_name}>
               <FormLabel>
                 {intl.formatMessage(messages.customerName)}
               </FormLabel>
@@ -73,9 +75,12 @@ const OrderForm: React.FC<OrderFormProps> = ({
                 onChange={(e) => handleInputChange('customer_name', e.target.value)}
                 placeholder="Enter your full name"
               />
+              {orderErrors.customer_name && (
+                <FormErrorMessage>{orderErrors.customer_name}</FormErrorMessage>
+              )}
             </FormControl>
             
-            <FormControl isRequired>
+            <FormControl isRequired isInvalid={!!orderErrors.customer_email}>
               <FormLabel>
                 {intl.formatMessage(messages.email)}
               </FormLabel>
@@ -85,22 +90,37 @@ const OrderForm: React.FC<OrderFormProps> = ({
                 onChange={(e) => handleInputChange('customer_email', e.target.value)}
                 placeholder="Enter your email address"
               />
+              {orderErrors.customer_email && (
+                <FormErrorMessage>{orderErrors.customer_email}</FormErrorMessage>
+              )}
             </FormControl>
           </HStack>
 
           <HStack spacing={4}>
-            <FormControl>
+            <FormControl isInvalid={!!orderErrors.customer_phone}>
               <FormLabel>
                 {intl.formatMessage(messages.phone)}
               </FormLabel>
               <Input
+                type="tel"
+                inputMode="numeric"
+                pattern="\\d*"
+                minLength={10}
+                maxLength={20}
+                title="Enter 10 to 20 digits"
                 value={orderForm.customer_phone}
-                onChange={(e) => handleInputChange('customer_phone', e.target.value)}
+                onChange={(e) => {
+                  const digitsOnly = e.target.value.replace(/\D/g, '');
+                  handleInputChange('customer_phone', digitsOnly);
+                }}
                 placeholder="Enter your phone number"
               />
+              {orderErrors.customer_phone && (
+                <FormErrorMessage>{orderErrors.customer_phone}</FormErrorMessage>
+              )}
             </FormControl>
             
-            <FormControl>
+            <FormControl isInvalid={!!orderErrors.quantity}>
               <FormLabel>
                 {intl.formatMessage(messages.quantity)}
               </FormLabel>
@@ -116,10 +136,13 @@ const OrderForm: React.FC<OrderFormProps> = ({
                   <NumberDecrementStepper />
                 </NumberInputStepper>
               </NumberInput>
+              {orderErrors.quantity && (
+                <FormErrorMessage>{orderErrors.quantity}</FormErrorMessage>
+              )}
             </FormControl>
           </HStack>
 
-          <FormControl isRequired>
+          <FormControl isRequired isInvalid={!!orderErrors.customer_address}>
             <FormLabel>
               {intl.formatMessage(messages.address)}
             </FormLabel>
@@ -128,6 +151,9 @@ const OrderForm: React.FC<OrderFormProps> = ({
               onChange={(e) => handleInputChange('customer_address', e.target.value)}
               placeholder="Enter your delivery address"
             />
+            {orderErrors.customer_address && (
+              <FormErrorMessage>{orderErrors.customer_address}</FormErrorMessage>
+            )}
           </FormControl>
 
           {extras.length > 0 && (

@@ -22,7 +22,7 @@ async def test_create_order(auth_client: AsyncClient):
     order_data = {
         "customer_name": "John Doe",
         "customer_email": "john@example.com",
-        "customer_phone": "+1234567890",
+        "customer_phone": "1234567890",
         "customer_address": "123 Main St, City, State 12345",
         "items": [
             {
@@ -163,7 +163,7 @@ async def test_create_order_existing_user(auth_client: AsyncClient):
     first_order_data = {
         "customer_name": "Existing User",
         "customer_email": "existing@example.com",
-        "customer_phone": "+1234567890",
+        "customer_phone": "1234567890",
         "customer_address": "123 Existing St, City, State 12345",
         "items": [
             {
@@ -183,7 +183,7 @@ async def test_create_order_existing_user(auth_client: AsyncClient):
     second_order_data = {
         "customer_name": "Existing User",
         "customer_email": "existing@example.com",
-        "customer_phone": "+1234567890",
+        "customer_phone": "1234567890",
         "customer_address": "123 Existing St, City, State 12345",
         "items": [
             {
