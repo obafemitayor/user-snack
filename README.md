@@ -65,7 +65,7 @@ UserSnap/
 Follow these concise steps to run the project using Docker for the backend and Node for the frontend:
 
 1. __Install Docker__
-   - Install (Docker Desktop)[https://www.docker.com/products/docker-desktop/] or (OrbStack)[https://orbstack.dev/] (MacOS Only).
+   - Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) or [OrbStack](https://orbstack.dev/) (MacOS Only).
 
 2. __Build backend containers__
    ```bash
