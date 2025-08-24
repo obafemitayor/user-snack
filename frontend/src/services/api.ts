@@ -21,13 +21,16 @@ const handleAuthError = (error: any): void => {
 
   const status = error.response?.status;
   const isNetwork = error.message === 'Network Error';
+  console.log('isNetwork', isNetwork);
   const isAuthError = status === 401 || status === 403;
+  console.log('isAuthError', isAuthError);
 
   if (isNetwork || isAuthError) {
     try {
       localStorage.removeItem(TOKEN_KEY);
     } catch {}
     if (typeof window !== 'undefined' && window.location?.pathname !== '/login') {
+      console.log('Redirecting to login');
       window.location.replace('/login');
     }
   }
