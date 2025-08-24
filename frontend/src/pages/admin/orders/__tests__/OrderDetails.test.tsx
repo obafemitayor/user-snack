@@ -3,7 +3,7 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
-import { ordersAPI } from '../../../../services/api';
+import { ordersAPI, TOKEN_KEY } from '../../../../services/api';
 import { messages } from '../../../../locales/en';
 import OrderDetails from '../OrderDetails';
 import { ChakraProvider } from '@chakra-ui/react';
@@ -13,6 +13,7 @@ jest.mock('../../../../services/api', () => ({
     getById: jest.fn(),
     updateStatus: jest.fn(),
   },
+  TOKEN_KEY: 'usersnap_auth_token',
 }));
 
 const mockNavigate = jest.fn();
@@ -24,15 +25,15 @@ jest.mock('react-router-dom', () => ({
 
 jest.mock('@chakra-ui/react', () => {
   const React = require('react');
-  const Pass = ({ children, ...props }: any) => React.createElement('div', props, children);
-  const TextPass = ({ children, ...props }: any) => React.createElement('span', props, children);
-  const SelectPass = ({ children, ...props }: any) => React.createElement('select', props, children);
-  const TablePass = ({ children, ...props }: any) => React.createElement('table', props, children);
-  const TheadPass = ({ children, ...props }: any) => React.createElement('thead', props, children);
-  const TbodyPass = ({ children, ...props }: any) => React.createElement('tbody', props, children);
-  const TrPass = ({ children, ...props }: any) => React.createElement('tr', props, children);
-  const ThPass = ({ children, ...props }: any) => React.createElement('th', props, children);
-  const TdPass = ({ children, ...props }: any) => React.createElement('td', props, children);
+  const Pass = ({ children }: any) => React.createElement('div', null, children);
+  const TextPass = ({ children }: any) => React.createElement('span', null, children);
+  const SelectPass = ({ children, onChange, value }: any) => React.createElement('select', { onChange, value }, children);
+  const TablePass = ({ children }: any) => React.createElement('table', null, children);
+  const TheadPass = ({ children }: any) => React.createElement('thead', null, children);
+  const TbodyPass = ({ children }: any) => React.createElement('tbody', null, children);
+  const TrPass = ({ children }: any) => React.createElement('tr', null, children);
+  const ThPass = ({ children }: any) => React.createElement('th', null, children);
+  const TdPass = ({ children }: any) => React.createElement('td', null, children);
   const useToast = () => () => {};
   return {
     ChakraProvider: Pass,
@@ -40,8 +41,8 @@ jest.mock('@chakra-ui/react', () => {
     Container: Pass,
     Heading: TextPass,
     Text: TextPass,
-    Button: ({ children, isDisabled, isLoading, ...props }: any) =>
-      React.createElement('button', { disabled: !!isDisabled || !!isLoading, ...props }, children),
+    Button: ({ children, isDisabled, isLoading, onClick, type }: any) =>
+      React.createElement('button', { disabled: !!isDisabled || !!isLoading, onClick, type }, children),
     VStack: Pass,
     HStack: Pass,
     Badge: TextPass,
@@ -126,6 +127,7 @@ const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 describe('OrderDetails', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    localStorage.setItem(TOKEN_KEY, 'test-token');
   });
 
   it('displays loading spinner initially', () => {

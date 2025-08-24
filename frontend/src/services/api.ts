@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-const TOKEN_KEY = 'usersnap_auth_token';
+export const TOKEN_KEY = 'usersnap_auth_token';
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -9,23 +9,6 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
-export const initializeAuth = async (): Promise<void> => {
-  const existingToken = localStorage.getItem(TOKEN_KEY);
-  if (existingToken) {
-    return;
-  }
-
-  try {
-    const response = await axios.post(`${API_BASE_URL}/auth/token`, {
-      user_id: 'demo-user-123'
-    });
-    const token = response.data.access_token;
-    localStorage.setItem(TOKEN_KEY, token);
-  } catch (error) {
-    console.error('Failed to initialize auth token:', error);
-  }
-};
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem(TOKEN_KEY);
@@ -170,6 +153,13 @@ export const extrasAPI = {
       throw error;
     }
   }
+};
+
+export const authAPI = {
+  login: async (email: string, password: string): Promise<string> => {
+    const resp = await axios.post(`${API_BASE_URL}/auth`, { email, password });
+    return resp.data.access_token as string;
+  },
 };
 
 export default api;

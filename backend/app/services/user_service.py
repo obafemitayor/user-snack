@@ -1,17 +1,37 @@
-from typing import List, Optional
+from typing import List, Optional, Tuple
 from bson import ObjectId
 from datetime import datetime
 from app.models.user import User
+import os
+import hashlib
+import secrets
 
 class UserService:
     def __init__(self, database, client=None):
         self.database = database
         self.client = client
     
+    def get_hashed_password(self, raw_password: str) -> Tuple[str, str]:
+        password_salt = secrets.token_hex(16)
+        dk = hashlib.pbkdf2_hmac(
+            'sha256',
+            raw_password.encode('utf-8'),
+            bytes.fromhex(password_salt),
+            100_000,
+            dklen=32,
+        )
+        return dk.hex(), password_salt
+    
     async def create_user(self, user_data: dict) -> User:
         existing_user = await self.get_user_by_email(user_data.get("email"))
         if existing_user:
             raise ValueError("User with this email already exists")
+        raw_password = user_data.pop("password", None)
+        if raw_password:
+            password_hash, password_salt = self.get_hashed_password(raw_password)
+            user_data["password_hash"] = password_hash
+            user_data["password_salt"] = password_salt
+
         result = await self.database.users.insert_one(user_data)
         user_data["_id"] = result.inserted_id
         return User(**user_data)
@@ -33,6 +53,19 @@ class UserService:
             return None
         except Exception:
             return None
+
+    def verify_password(self, raw_password: str, password_hash: str, password_salt: str) -> bool:
+        try:
+            dk = hashlib.pbkdf2_hmac(
+                'sha256',
+                raw_password.encode('utf-8'),
+                bytes.fromhex(password_salt),
+                100_000,
+                dklen=32,
+            )
+            return secrets.compare_digest(dk.hex(), password_hash)
+        except Exception:
+            return False
     
     async def get_all_users(self, skip: int = 0, limit: int = 10) -> tuple[List[User], int]:
         total = await self.database.users.count_documents({})

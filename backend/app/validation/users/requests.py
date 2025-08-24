@@ -4,6 +4,7 @@ from typing import Optional
 class CreateUserRequest(BaseModel):
     name: str = Field(..., min_length=1, max_length=100, description="User name")
     email: str = Field(..., pattern=r'^[^@]+@[^@]+\.[^@]+$', description="Valid email address")
+    password: str = Field(..., min_length=6, max_length=128, description="User password")
     phone: Optional[str] = Field(
         None,
         min_length=10,

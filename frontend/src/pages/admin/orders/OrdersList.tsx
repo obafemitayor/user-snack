@@ -23,7 +23,7 @@ import {
 } from '@chakra-ui/react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
-import { ordersAPI } from '../../../services/api';
+import { ordersAPI, TOKEN_KEY } from '../../../services/api';
 import { messages } from './messages';
 import Pagination from '../../../components/Pagination';
 import { getStatusColor, formatDate } from '../../../utils/orderUtils';
@@ -80,8 +80,13 @@ const OrdersList: React.FC = () => {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) {
+      navigate('/login', { state: { from: '/admin/orders' } });
+      return;
+    }
     fetchOrders();
-  }, []);
+  }, [navigate]);
 
   const handlePageChange = (page: number) => {
     fetchOrders(page);

@@ -202,7 +202,8 @@ async def test_update_user_validation_errors(auth_client: AsyncClient):
     user_data = {
         "name": "Test User",
         "email": "test@example.com",
-        "address": "Test Address"
+        "address": "Test Address",
+        "password": "Secret123"
     }
     create_response = await auth_client.post("/users/", json=user_data)
     user_id = create_response.json()["_id"]
@@ -264,7 +265,8 @@ async def test_create_user_success(auth_client: AsyncClient):
         "name": "New User",
         "email": "newuser@example.com",
         "address": "New Address",
-        "phone": "1234567890"
+        "phone": "1234567890",
+        "password": "Secret123"
     }
     
     response = await auth_client.post("/users/", json=user_data)
@@ -283,7 +285,8 @@ async def test_create_user_duplicate_email_conflict(auth_client: AsyncClient):
     user = {
         "name": "Dup User",
         "email": "dup@example.com",
-        "address": "Some Address"
+        "address": "Some Address",
+        "password": "Secret123"
     }
     # First creation succeeds
     resp1 = await auth_client.post("/users/", json=user)
@@ -302,7 +305,8 @@ async def test_update_user_success(auth_client: AsyncClient):
     user_data = {
         "name": "Update User",
         "email": "updateuser@example.com",
-        "address": "Update Address"
+        "address": "Update Address",
+        "password": "Secret123"
     }
     create_response = await auth_client.post("/users/", json=user_data)
     user_id = create_response.json()["_id"]
@@ -324,7 +328,8 @@ async def test_delete_user_success(auth_client: AsyncClient):
     user_data = {
         "name": "Delete User",
         "email": "deleteuser@example.com",
-        "address": "Delete Address"
+        "address": "Delete Address",
+        "password": "Secret123"
     }
     create_response = await auth_client.post("/users/", json=user_data)
     user_id = create_response.json()["_id"]

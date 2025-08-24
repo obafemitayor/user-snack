@@ -32,7 +32,7 @@ import {
 } from '@chakra-ui/react';
 import { useIntl } from 'react-intl';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ordersAPI } from '../../../services/api';
+import { ordersAPI, TOKEN_KEY } from '../../../services/api';
 import { messages } from './messages';
 import { getStatusColor, formatDate } from '../../../utils/orderUtils';
 
@@ -85,8 +85,13 @@ const OrderDetails: React.FC = () => {
   ];
 
   useEffect(() => {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (!token) {
+      navigate('/login', { state: { from: `/admin/orders/${id}` } });
+      return;
+    }
     fetchOrderDetails();
-  }, [id]);
+  }, [id, navigate]);
 
   const fetchOrderDetails = async () => {
     if (!id) {
@@ -182,7 +187,7 @@ const OrderDetails: React.FC = () => {
         <Button
           variant="ghost"
           alignSelf="flex-start"
-          onClick={() => navigate('/orders')}
+          onClick={() => navigate('/admin/orders')}
         >
           {intl.formatMessage(messages.backToOrders)}
         </Button>

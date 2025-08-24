@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
-import { ordersAPI } from '../../../../services/api';
+import { ordersAPI, TOKEN_KEY } from '../../../../services/api';
 import { messages } from '../../../../locales/en';
 import OrdersList from '../OrdersList';
 import { ChakraProvider } from '@chakra-ui/react';
@@ -12,6 +12,7 @@ jest.mock('../../../../services/api', () => ({
   ordersAPI: {
     getAll: jest.fn(),
   },
+  TOKEN_KEY: 'usersnap_auth_token',
 }));
 
 const mockNavigate = jest.fn();
@@ -115,6 +116,7 @@ describe('OrdersList', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(console, 'error').mockImplementation(() => {});
+    localStorage.setItem(TOKEN_KEY, 'test-token');
   });
 
   afterEach(() => {

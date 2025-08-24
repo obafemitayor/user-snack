@@ -39,6 +39,8 @@ class User(BaseModel):
     email: str
     phone: Optional[str] = None
     address: Optional[str] = None
+    password_hash: Optional[str] = Field(default=None, exclude=True)
+    password_salt: Optional[str] = Field(default=None, exclude=True)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     
     class Config:

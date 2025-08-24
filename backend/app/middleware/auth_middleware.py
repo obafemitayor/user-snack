@@ -24,7 +24,7 @@ class JWTAuthMiddleware:
                 return
             
             # Skip authentication for public endpoints
-            if self._is_public_endpoint(request.url.path):
+            if self._is_public_endpoint(request.method, request.url.path):
                 await self.app(scope, receive, send)
                 return
             
@@ -61,17 +61,40 @@ class JWTAuthMiddleware:
         
         await self.app(scope, receive, send)
     
-    def _is_public_endpoint(self, path: str) -> bool:
-        """Define which endpoints don't require authentication."""
-        public_paths = [
-            "/health",
-            "/docs",
-            "/redoc",
-            "/openapi.json",
-            "/auth/token"
-        ]
-        
+    def _is_public_endpoint(self, method: str, path: str) -> bool:
+        """Define which endpoints don't require authentication.
+        Public routes:
+        - GET    /pizzas, /pizzas/{id}
+        - GET    /extras, /extras/{id}
+        - POST   /orders          (place order)
+        - POST   /users           (register user)
+        - Existing public: /, /health, docs, redoc, openapi, /auth
+        """
+        # Always public basics
         if path == "/":
             return True
-        
-        return any(path.startswith(public_path) for public_path in public_paths)
+        if path.startswith("/health") or path.startswith("/docs") or path.startswith("/redoc") or path.startswith("/openapi.json"):
+            return True
+        # Support both legacy /auth/token and current /auth route
+        if path.startswith("/auth"):
+            return True
+
+        # Normalize for trailing slash comparisons
+        normalized = path.rstrip("/")
+
+        # Public GET endpoints
+        if method == "GET":
+            if normalized.startswith("/pizzas"):
+                return True
+            if normalized.startswith("/extras"):
+                return True
+
+        # Public POST endpoint for placing orders
+        if method == "POST":
+            if normalized == "/orders":
+                return True
+            # Public registration endpoint
+            if normalized == "/users":
+                return True
+
+        return False
