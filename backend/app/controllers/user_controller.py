@@ -85,6 +85,10 @@ async def create_user(
 ):
     try:
         return await user_service.create_user(user_data.model_dump())
+    except ValueError as ve:
+        raise HTTPException(status_code=409, detail=str(ve))
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

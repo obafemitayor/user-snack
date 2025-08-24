@@ -9,6 +9,8 @@ import PizzaMenuList from './pages/pizza/PizzaMenuList';
 import PizzaMenuDetails from './pages/pizza/PizzaMenuDetails';
 import OrdersList from './pages/admin/orders/OrdersList';
 import OrderDetails from './pages/admin/orders/OrderDetails';
+import { CartProvider } from './contexts/CartContext';
+import CartPage from './pages/cart/CartPage';
 
 const App: React.FC = () => {
   const [isAuthInitialized, setIsAuthInitialized] = useState(false);
@@ -33,18 +35,21 @@ const App: React.FC = () => {
 
   return (
     <IntlProvider locale="en" messages={messages}>
-      <Box minH="100vh" bg="gray.50">
-        <Navbar />
-        <Box as="main" pt="80px">
-          <Routes>
-            <Route path="/" element={<PizzaMenuList />} />
-            <Route path="/pizzas" element={<PizzaMenuList />} />
-            <Route path="/pizzas/:id" element={<PizzaMenuDetails />} />
-            <Route path="/admin/orders" element={<OrdersList />} />
-            <Route path="/admin/orders/:id" element={<OrderDetails />} />
-          </Routes>
+      <CartProvider>
+        <Box minH="100vh" bg="gray.50">
+          <Navbar />
+          <Box as="main" pt="80px">
+            <Routes>
+              <Route path="/" element={<PizzaMenuList />} />
+              <Route path="/pizzas" element={<PizzaMenuList />} />
+              <Route path="/pizzas/:id" element={<PizzaMenuDetails />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/admin/orders" element={<OrdersList />} />
+              <Route path="/admin/orders/:id" element={<OrderDetails />} />
+            </Routes>
+          </Box>
         </Box>
-      </Box>
+      </CartProvider>
     </IntlProvider>
   );
 };

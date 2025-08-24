@@ -64,6 +64,10 @@ export const messages = defineMessages({
     id: 'Pizza.PizzaDetails.phone_placeholder',
     defaultMessage: 'Enter your phone number'
   },
+  phoneDigitsHint: {
+    id: 'Pizza.PizzaDetails.phone_digits_hint',
+    defaultMessage: 'Enter 10 to 20 digits'
+  },
   address: {
     id: 'Pizza.PizzaDetails.address',
     defaultMessage: 'Delivery Address'
@@ -95,6 +99,14 @@ export const messages = defineMessages({
   placeOrder: {
     id: 'Pizza.PizzaDetails.place_order',
     defaultMessage: 'Place Order'
+  },
+  addToCart: {
+    id: 'Pizza.PizzaDetails.add_to_cart',
+    defaultMessage: 'Add to Cart'
+  },
+  goToCart: {
+    id: 'Pizza.PizzaDetails.go_to_cart',
+    defaultMessage: 'Go to Cart'
   },
   orderSuccess: {
     id: 'Pizza.PizzaDetails.order_success',
@@ -147,6 +159,10 @@ export const messages = defineMessages({
   selectedExtras: {
     id: 'Pizza.PizzaDetails.selected_extras',
     defaultMessage: 'Selected Extras:'
+  },
+  removeExtra: {
+    id: 'Pizza.PizzaDetails.remove_extra',
+    defaultMessage: 'Remove extra'
   },
   selectExtraPlaceholder: {
     id: 'Pizza.PizzaDetails.select_extra_placeholder',

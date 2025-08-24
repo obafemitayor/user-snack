@@ -7,6 +7,9 @@ class PizzaService:
         self.database = database
     
     async def create_pizza(self, pizza_data: dict) -> Pizza:
+        existing = await self.get_pizza_by_name(pizza_data.get("name"))
+        if existing:
+            raise ValueError("Pizza with this name already exists")
         pizza_data["available"] = pizza_data.get("available", True)
         result = await self.database.pizzas.insert_one(pizza_data)
         pizza_data["_id"] = result.inserted_id
@@ -23,6 +26,12 @@ class PizzaService:
     
     async def get_pizza_by_id(self, pizza_id: str) -> Optional[Pizza]:
         pizza_data = await self.database.pizzas.find_one({"_id": ObjectId(pizza_id)})
+        if pizza_data:
+            return Pizza(**pizza_data)
+        return None
+
+    async def get_pizza_by_name(self, name: str) -> Optional[Pizza]:
+        pizza_data = await self.database.pizzas.find_one({"name": name, "available": True})
         if pizza_data:
             return Pizza(**pizza_data)
         return None

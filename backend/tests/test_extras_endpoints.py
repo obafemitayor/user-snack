@@ -20,6 +20,20 @@ async def test_create_extra(auth_client: AsyncClient):
     assert "_id" in data
 
 @pytest.mark.asyncio
+async def test_create_extra_duplicate_name_conflict(auth_client: AsyncClient):
+    """Creating an extra with an existing name should return 409 Conflict."""
+    extra = {"name": "Duplicate Extra", "price": 1.25}
+    # First creation succeeds
+    resp1 = await auth_client.post("/extras/", json=extra)
+    assert resp1.status_code == 200
+    # Second creation with same name should fail with 409
+    resp2 = await auth_client.post("/extras/", json=extra)
+    assert resp2.status_code == 409
+    body = resp2.json()
+    assert "detail" in body
+    assert "already exists" in body["detail"].lower()
+
+@pytest.mark.asyncio
 async def test_get_all_extras(auth_client: AsyncClient):
     """Test getting all extras."""
     extra1 = {"name": "Pepperoni", "price": 3.00}

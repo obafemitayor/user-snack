@@ -9,6 +9,9 @@ class UserService:
         self.client = client
     
     async def create_user(self, user_data: dict) -> User:
+        existing_user = await self.get_user_by_email(user_data.get("email"))
+        if existing_user:
+            raise ValueError("User with this email already exists")
         result = await self.database.users.insert_one(user_data)
         user_data["_id"] = result.inserted_id
         return User(**user_data)

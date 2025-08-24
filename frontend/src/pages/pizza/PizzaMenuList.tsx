@@ -17,7 +17,7 @@ import {
   Center,
 } from '@chakra-ui/react';
 import { useIntl } from 'react-intl';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { pizzaAPI } from '../../services/api';
 import Pagination from '../../components/Pagination';
 import { messages } from './messages';

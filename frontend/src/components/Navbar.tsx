@@ -5,9 +5,14 @@ import {
   HStack,
   Link,
   Text,
-  useColorModeValue,
+  Spacer,
+  Icon,
 } from '@chakra-ui/react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { useCart } from '../contexts/CartContext';
+import { useIntl } from 'react-intl';
+import { messages as navMessages } from './messages';
+import { ReactComponent as CartIcon } from '../assets/icons/cart.svg';
 
 interface NavLinkProps {
   children: React.ReactNode;
@@ -38,18 +43,30 @@ const NavLink: React.FC<NavLinkProps> = ({ children, to }) => {
 };
 
 const Navbar: React.FC = () => {
+  const { items } = useCart();
+  const count = items.length;
+  const intl = useIntl();
   return (
     <Box bg="gray.800" px={4} position="fixed" top={0} left={0} right={0} zIndex={1000}>
-      <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+      <Flex h={16} alignItems={'center'}>
         <HStack spacing={8} alignItems={'center'}>
           <Box>
             <Text fontSize="xl" fontWeight="bold" color="white">
-              🍕 UserSnap Pizza
+              {intl.formatMessage(navMessages.navBrand)}
             </Text>
           </Box>
           <HStack as={'nav'} spacing={4}>
-            <NavLink to="/pizzas">Menu</NavLink>
+            <NavLink to="/pizzas">{intl.formatMessage(navMessages.navMenu)}</NavLink>
           </HStack>
+        </HStack>
+        <Spacer />
+        <HStack>
+          <NavLink to="/cart">
+            <HStack spacing={2} align="center">
+              <Icon as={CartIcon} boxSize={5} color="orange.400" />
+              <Text>{intl.formatMessage(navMessages.navCart, { count })}</Text>
+            </HStack>
+          </NavLink>
         </HStack>
       </Flex>
     </Box>

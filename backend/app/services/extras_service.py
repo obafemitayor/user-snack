@@ -7,6 +7,10 @@ class ExtrasService:
         self.database = database
     
     async def create_extra(self, extra_data: dict) -> Extra:
+        existing = await self.get_extra_by_name(extra_data.get("name"))
+        if existing:
+            raise ValueError("Extra with this name already exists")
+
         extra_data["available"] = True
         result = await self.database.extras.insert_one(extra_data)
         extra_data["_id"] = result.inserted_id
@@ -21,6 +25,12 @@ class ExtrasService:
     
     async def get_extra_by_id(self, extra_id: str) -> Optional[Extra]:
         extra_data = await self.database.extras.find_one({"_id": ObjectId(extra_id)})
+        if extra_data:
+            return Extra(**extra_data)
+        return None
+
+    async def get_extra_by_name(self, name: str) -> Optional[Extra]:
+        extra_data = await self.database.extras.find_one({"name": name, "available": True})
         if extra_data:
             return Extra(**extra_data)
         return None

@@ -20,13 +20,13 @@ jest.mock('react-router-dom', () => ({
 
 jest.mock('@chakra-ui/react', () => {
   const React = require('react');
-  const Pass = ({ children, ...rest }: any) => React.createElement('div', rest, children);
-  const ButtonPass = ({ children, onClick, ...rest }: any) => React.createElement('button', { onClick, ...rest }, children);
-  const HeadingPass = ({ children, ...rest }: any) => React.createElement('span', rest, children);
-  const TextPass = ({ children, ...rest }: any) => React.createElement('span', rest, children);
-  const BadgePass = ({ children, ...rest }: any) => React.createElement('span', rest, children);
-  const ImagePass = ({ alt, src, ...rest }: any) => React.createElement('img', { alt, src, ...rest });
-  const SpinnerPass = ({ ...rest }: any) => React.createElement('div', { role: 'status', ...rest }, 'Loading...');
+  const Pass = ({ children }: any) => React.createElement('div', {}, children);
+  const ButtonPass = ({ children, onClick }: any) => React.createElement('button', { onClick }, children);
+  const HeadingPass = ({ children }: any) => React.createElement('span', {}, children);
+  const TextPass = ({ children }: any) => React.createElement('span', {}, children);
+  const BadgePass = ({ children }: any) => React.createElement('span', {}, children);
+  const ImagePass = ({ alt, src }: any) => React.createElement('img', { alt, src });
+  const SpinnerPass = () => React.createElement('div', { role: 'status' }, 'Loading...');
   return {
     __esModule: true,
     Container: Pass,
@@ -49,8 +49,7 @@ jest.mock('@chakra-ui/react', () => {
 
 jest.mock('../../../components/Pagination', () => {
   const React = require('react');
-  const PaginationStub = ({ currentPage, totalPages, totalItems }: any) =>
-    React.createElement('div', { 'data-testid': 'pagination', currentPage, totalPages, totalItems });
+  const PaginationStub = () => React.createElement('div', { 'data-testid': 'pagination' });
   return { __esModule: true, default: PaginationStub };
 });
 

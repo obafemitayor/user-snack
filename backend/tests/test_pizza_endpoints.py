@@ -21,6 +21,26 @@ async def test_create_pizza(auth_client: AsyncClient):
     assert "_id" in data
 
 @pytest.mark.asyncio
+async def test_create_pizza_duplicate_name_conflict(auth_client: AsyncClient):
+    """Creating a pizza with an existing name should return 409 Conflict."""
+    pizza_data = {
+        "name": "Duplicate Pie",
+        "description": "First instance",
+        "price": "9.99",
+    }
+
+    # First creation succeeds
+    resp1 = await auth_client.post("/pizzas/", data=pizza_data)
+    assert resp1.status_code == 200
+
+    # Second creation with same name should fail with 409
+    resp2 = await auth_client.post("/pizzas/", data=pizza_data)
+    assert resp2.status_code == 409
+    body = resp2.json()
+    assert "detail" in body
+    assert "already exists" in body["detail"].lower()
+
+@pytest.mark.asyncio
 async def test_get_all_pizzas(auth_client: AsyncClient):
     """Test getting all pizzas."""
     # Create test pizzas

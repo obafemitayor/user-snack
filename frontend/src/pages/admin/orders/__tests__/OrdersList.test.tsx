@@ -111,9 +111,14 @@ const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </ChakraProvider>
 );
 
-describe('OrdersList (real component)', () => {
+describe('OrdersList', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    (console.error as unknown as jest.Mock).mockRestore?.();
   });
 
   it('renders orders list title', async () => {

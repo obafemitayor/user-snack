@@ -278,6 +278,24 @@ async def test_create_user_success(auth_client: AsyncClient):
     assert "_id" in data
 
 @pytest.mark.asyncio
+async def test_create_user_duplicate_email_conflict(auth_client: AsyncClient):
+    """Creating a user with an existing email should return 409 Conflict."""
+    user = {
+        "name": "Dup User",
+        "email": "dup@example.com",
+        "address": "Some Address"
+    }
+    # First creation succeeds
+    resp1 = await auth_client.post("/users/", json=user)
+    assert resp1.status_code == 200
+    # Second creation with same email should fail with 409
+    resp2 = await auth_client.post("/users/", json=user)
+    assert resp2.status_code == 409
+    body = resp2.json()
+    assert "detail" in body
+    assert "already exists" in body["detail"].lower()
+
+@pytest.mark.asyncio
 async def test_update_user_success(auth_client: AsyncClient):
     """Test successful user update."""
     # Create user first

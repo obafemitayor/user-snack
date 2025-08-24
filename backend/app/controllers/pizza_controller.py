@@ -39,6 +39,8 @@ async def create_pizza(
         return await pizza_service.create_pizza(data)
     except HTTPException:
         raise
+    except ValueError as ve:
+        raise HTTPException(status_code=409, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

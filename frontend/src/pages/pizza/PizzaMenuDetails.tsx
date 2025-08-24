@@ -13,14 +13,14 @@ import {
   useToast,
   Spinner,
   Center,
+  
 } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useIntl } from 'react-intl';
 import { useParams, useNavigate } from 'react-router-dom';
 import { pizzaAPI, extrasAPI } from '../../services/api';
 import { messages } from './messages';
-import OrderFormWrapper from '../../components/OrderFormWrapper';
-import { OrderProvider } from '../../contexts/OrderContext';
+import AddToCart from '../../components/AddToCart';
 
 interface Pizza {
   _id: string;
@@ -37,7 +37,7 @@ interface Extra {
 }
 
 
-const PizzaMenuDetailsContent: React.FC = () => {
+const PizzaMenuDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const toast = useToast();
@@ -152,22 +152,9 @@ const PizzaMenuDetailsContent: React.FC = () => {
           </CardBody>
         </Card>
 
-        <OrderFormWrapper
-          extras={extras}
-          pizza={pizza}
-          messages={messages}
-        />
+        <AddToCart pizza={pizza} extras={extras} />
       </VStack>
     </Container>
-  );
-};
-
-
-const PizzaMenuDetails: React.FC = () => {
-  return (
-    <OrderProvider>
-      <PizzaMenuDetailsContent />
-    </OrderProvider>
   );
 };
 

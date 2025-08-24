@@ -3,9 +3,10 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
-import { pizzaAPI, extrasAPI, ordersAPI } from '../../../services/api';
+import { pizzaAPI, extrasAPI } from '../../../services/api';
 import { messages } from '../../../locales/en';
 import PizzaMenuDetails from '../PizzaMenuDetails';
+import { CartProvider } from '../../../contexts/CartContext';
 
 jest.mock('../../../services/api', () => ({
   pizzaAPI: {
@@ -13,9 +14,6 @@ jest.mock('../../../services/api', () => ({
   },
   extrasAPI: {
     getAll: jest.fn(),
-  },
-  ordersAPI: {
-    create: jest.fn(),
   },
 }));
 
@@ -122,14 +120,21 @@ const mockExtras = {
 const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <IntlProvider locale="en" messages={messages}>
     <BrowserRouter>
-      {children}
+      <CartProvider>
+        {children}
+      </CartProvider>
     </BrowserRouter>
   </IntlProvider>
 );
 
-describe('PizzaMenuDetails (real component)', () => {
+describe('PizzaMenuDetails', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    (console.error as unknown as jest.Mock).mockRestore?.();
   });
 
   it('displays loading spinner initially', () => {
@@ -164,27 +169,6 @@ describe('PizzaMenuDetails (real component)', () => {
     expect(screen.getByAltText('Margherita')).toBeInTheDocument();
   });
 
-  it('displays order form with customer fields', async () => {
-    (pizzaAPI.getById as jest.Mock).mockResolvedValue(mockPizza);
-    (extrasAPI.getAll as jest.Mock).mockResolvedValue(mockExtras);
-
-    render(
-      <TestWrapper>
-        <PizzaMenuDetails />
-      </TestWrapper>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText('Place Your Order')).toBeInTheDocument();
-    });
-
-    expect(screen.getByPlaceholderText('Enter your full name')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Enter your email address')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Enter your phone number')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Enter your delivery address')).toBeInTheDocument();
-    expect(screen.getByText('Quantity')).toBeInTheDocument();
-  });
-
   it('displays available extras', async () => {
     (pizzaAPI.getById as jest.Mock).mockResolvedValue(mockPizza);
     (extrasAPI.getAll as jest.Mock).mockResolvedValue(mockExtras);
@@ -199,10 +183,9 @@ describe('PizzaMenuDetails (real component)', () => {
       expect(screen.getByText('Add Extras')).toBeInTheDocument();
     });
 
-    const extraSelect = screen.getByRole('combobox');
-
+    // Options render with currency formatting
     await waitFor(() => {
-      expect(screen.getByText('Extra Cheese (+$2.5)')).toBeInTheDocument();
+      expect(screen.getByText('Extra Cheese (+$2.50)')).toBeInTheDocument();
       expect(screen.getByText('Mushrooms (+$1.99)')).toBeInTheDocument();
     });
   });
@@ -218,6 +201,7 @@ describe('PizzaMenuDetails (real component)', () => {
       </TestWrapper>
     );
 
+    // Wait for details to render
     await waitFor(() => {
       expect(screen.getByText('Add Extras')).toBeInTheDocument();
     });
@@ -232,7 +216,7 @@ describe('PizzaMenuDetails (real component)', () => {
     await waitFor(() => {
       expect(screen.getByText('Selected Extras:')).toBeInTheDocument();
       expect(screen.getByText('Extra Cheese')).toBeInTheDocument();
-      expect(screen.getByText('+$2.5')).toBeInTheDocument();
+      expect(screen.getByText('+$2.50')).toBeInTheDocument();
     });
 
     // Remove the extra
@@ -271,46 +255,7 @@ describe('PizzaMenuDetails (real component)', () => {
     });
   });
 
-  it('places order successfully with valid form data', async () => {
-    const user = userEvent.setup();
-    (pizzaAPI.getById as jest.Mock).mockResolvedValue(mockPizza);
-    (extrasAPI.getAll as jest.Mock).mockResolvedValue(mockExtras);
-    (ordersAPI.create as jest.Mock).mockResolvedValue({ data: { _id: 'order123' } });
-
-    render(
-      <TestWrapper>
-        <PizzaMenuDetails />
-      </TestWrapper>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText('Place Your Order')).toBeInTheDocument();
-    });
-
-    // Fill out the form
-    await user.type(screen.getByPlaceholderText('Enter your full name'), 'John Doe');
-    await user.type(screen.getByPlaceholderText('Enter your email address'), 'john@example.com');
-    await user.type(screen.getByPlaceholderText('Enter your phone number'), '1234567890');
-    await user.type(screen.getByPlaceholderText('Enter your delivery address'), '123 Main St');
-
-    // Place the order
-    const placeOrderButton = screen.getByText('Place Order');
-    await user.click(placeOrderButton);
-
-    await waitFor(() => {
-      expect(ordersAPI.create).toHaveBeenCalledWith({
-        customer_name: 'John Doe',
-        customer_email: 'john@example.com',
-        customer_phone: '1234567890',
-        customer_address: '123 Main St',
-        items: [{ pizza_id: '1', quantity: 1, extras: [] }]
-      });
-    });
-
-    expect(mockNavigate).toHaveBeenCalledWith('/pizzas');
-  });
-
-  it('validates required fields before placing order', async () => {
+  it('adds to cart when clicking Add to Cart', async () => {
     const user = userEvent.setup();
     (pizzaAPI.getById as jest.Mock).mockResolvedValue(mockPizza);
     (extrasAPI.getAll as jest.Mock).mockResolvedValue(mockExtras);
@@ -322,15 +267,10 @@ describe('PizzaMenuDetails (real component)', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Place Order')).toBeInTheDocument();
+      expect(screen.getByText('Add to Cart')).toBeInTheDocument();
     });
-
-    // Try to place order without filling required fields
-    const placeOrderButton = screen.getByText('Place Order');
-    await user.click(placeOrderButton);
-
-    // Should not call the API
-    expect(ordersAPI.create).not.toHaveBeenCalled();
+    const addToCartButton = screen.getByText('Add to Cart');
+    await user.click(addToCartButton);
   });
 
   it('handles quantity changes correctly', async () => {
@@ -348,7 +288,6 @@ describe('PizzaMenuDetails (real component)', () => {
       expect(screen.getByText('Total: $12.99')).toBeInTheDocument();
     });
 
-    // Increase quantity - set value directly to avoid concatenation behavior in mocks
     const spinbuttons = screen.getAllByRole('spinbutton');
     const targetInput = spinbuttons[1] ?? spinbuttons[0];
     fireEvent.change(targetInput, { target: { value: '2' } });

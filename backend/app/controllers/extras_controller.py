@@ -19,6 +19,8 @@ async def create_extra(
 ):
     try:
         return await extras_service.create_extra(extra_data.model_dump())
+    except ValueError as ve:
+        raise HTTPException(status_code=409, detail=str(ve))
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
