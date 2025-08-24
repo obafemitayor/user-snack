@@ -6,14 +6,14 @@ export const messages = {
   'pizza.menu.noItems': 'No pizzas available at the moment',
   'pizza.menu.viewDetails': 'View Details & Order',
   'pizza.menu.ingredients': 'Ingredients: {ingredients}',
-  'pizza.menu.price': '${price}',
+  'pizza.menu.price': '{price}',
 
   // Pizza Details Messages
   'pizza.details.title': 'Pizza Details',
   'pizza.details.loading': 'Loading pizza details...',
   'pizza.details.notFound': 'Pizza not found',
   'pizza.details.backToMenu': 'Back to Menu',
-  'pizza.details.price': '${price}',
+  'pizza.details.price': '{price}',
   'pizza.details.addExtras': 'Add Extras',
   'pizza.details.selectedExtras': 'Selected Extras:',
   'pizza.details.total': 'Total: {total}',

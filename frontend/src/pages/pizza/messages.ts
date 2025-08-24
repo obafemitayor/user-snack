@@ -16,7 +16,7 @@ export const messages = defineMessages({
   },
   menuPrice: {
     id: 'Pizza.PizzaMenu.menu_price',
-    defaultMessage: '${price}'
+    defaultMessage: '{price}'
   },
   viewDetails: {
     id: 'Pizza.PizzaMenu.view_details',
