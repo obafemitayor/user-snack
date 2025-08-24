@@ -17,10 +17,19 @@ const getAuthHeaders = () => {
 };
 
 const handleAuthError = (error: any): void => {
-  if (axios.isAxiosError(error) && error.message === 'Network Error') {
+  if (!axios.isAxiosError(error)) return;
+
+  const status = error.response?.status;
+  const isNetwork = error.message === 'Network Error';
+  const isAuthError = status === 401 || status === 403;
+
+  if (isNetwork || isAuthError) {
     try {
       localStorage.removeItem(TOKEN_KEY);
     } catch {}
+    if (typeof window !== 'undefined' && window.location?.pathname !== '/login') {
+      window.location.replace('/login');
+    }
   }
 };
 

@@ -35,6 +35,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ordersAPI, TOKEN_KEY } from '../../../services/api';
 import { messages } from './messages';
 import { getStatusColor, formatDate } from '../../../utils/orderUtils';
+import LogoutButton from '../../../components/LogoutButton';
 
 interface OrderItem {
   pizza_id: string;
@@ -184,13 +185,16 @@ const OrderDetails: React.FC = () => {
   return (
     <Container maxW="container.lg" py={8}>
       <VStack spacing={8} align="stretch">
-        <Button
-          variant="ghost"
-          alignSelf="flex-start"
-          onClick={() => navigate('/admin/orders')}
-        >
-          {intl.formatMessage(messages.backToOrders)}
-        </Button>
+        <HStack justify="space-between" align="center">
+          <Button
+            variant="ghost"
+            alignSelf="flex-start"
+            onClick={() => navigate('/admin/orders')}
+          >
+            {intl.formatMessage(messages.backToOrders)}
+          </Button>
+          <LogoutButton />
+        </HStack>
 
         <Card>
           <CardBody>

@@ -27,6 +27,7 @@ import { ordersAPI, TOKEN_KEY } from '../../../services/api';
 import { messages } from './messages';
 import Pagination from '../../../components/Pagination';
 import { getStatusColor, formatDate } from '../../../utils/orderUtils';
+import LogoutButton from '../../../components/LogoutButton';
 
 interface Order {
   _id: string;
@@ -108,14 +109,17 @@ const OrdersList: React.FC = () => {
   return (
     <Container maxW="container.xl" py={8}>
       <VStack spacing={8} align="stretch">
-        <Box textAlign="center">
-          <Heading as="h1" size="xl" textAlign="center" mb={2}>
-          {intl.formatMessage(messages.listTitle)}
-        </Heading>
-        <Text fontSize="lg" color="gray.600" textAlign="center" mb={8}>
-          {intl.formatMessage(messages.listSubtitle)}
-        </Text>
-        </Box>
+        <HStack justify="space-between" align="center">
+          <Box textAlign="left">
+            <Heading as="h1" size="xl" mb={2}>
+              {intl.formatMessage(messages.listTitle)}
+            </Heading>
+            <Text fontSize="lg" color="gray.600" mb={2}>
+              {intl.formatMessage(messages.listSubtitle)}
+            </Text>
+          </Box>
+          <LogoutButton />
+        </HStack>
 
         {orders.length === 0 ? (
           <Center h="200px">
