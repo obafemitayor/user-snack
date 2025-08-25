@@ -1,10 +1,13 @@
-# UserSnap Pizza Delivery App
+# UserSnack Pizza Delivery App
 
 A full-stack pizza ordering application:
-- Backend: FastAPI + MongoDB with JWT auth middleware, robust validation, and test coverage.
-- Frontend: React (TypeScript) + Chakra UI + React-Intl with strong type safety and tests.
+- Backend: Python + FastAPI
+- Database: MongoDB
+- Frontend: React (TypeScript) + Chakra UI.
 
-You can view the app by visting https://user-snack.vercel.app/. To view all orders visit https://user-snack.vercel.app/admin/orders
+You can view the app by visting https://user-snack.vercel.app/. 
+To view all orders visit https://user-snack.vercel.app/admin/orders, You can use the details to login to the admin page
+email: `admin@usersnack.com`, password: `Password1234#`
 
 ## Project Structure
 
@@ -29,8 +32,11 @@ UserSnap/
 │   │   ├── components/
 │   │   ├── contexts/
 │   │   ├── pages/
+│   │   │   ├── admin/
+│   │   │   ├── auth/
+│   │   │   ├── login/
 │   │   │   ├── pizza/
-│   │   │   └── orders/
+│   │   │   └── cart/
 │   │   └── services/             # Axios API layer
 │   ├── package.json
 │   └── tsconfig.json
@@ -44,10 +50,10 @@ UserSnap/
 - Order Confirmation: endpoint to confirm an order.
 - Auth API: endpoint to generate JWT auth tokens.
 - User Interface to view all Pizza Menus and respective menu details.
-- User Interface to place orders for a pizza (including extras/quantity where applicable).
+- User Interface to add items to cart.
+- User Interface to place orders.
 - User Interface to view all placed orders.
 - User Interface to view/confirm the status of placed orders.
-- To keep things simple, Only one order can be placed at a time.
 
 ## Environment Variables
 
@@ -110,10 +116,7 @@ Follow these concise steps to run the project using Docker for the backend and N
 ## Improvements
 
 - Make order placement asynchronous via a message queue (Kafka or AWS SQS) to decouple requests from processing and improve throughput under load.
-- Switch backend pagination to cursor-based (opaque cursor with stable sort and next/prev tokens) to avoid page drift and improve performance on large collections.
-- Replace simple JWT auth with a more robust system: hashed credentials, refresh tokens, token rotation, and role-based access control (RBAC).
-- Implement a cart-based multi-item ordering flow in the UI (add/remove items, quantities, extras) with a single checkout.
-- Build an admin user management UI (list, create, update, delete users; manage roles/permissions).
+- Switch backend pagination to cursor-based pagination to improve performance.
+- Build a proper user management feature that allows users to onboard and login.
 - Build a menu management UI (CRUD pizzas/extras, pricing, availability/status toggles).
 - Add end-to-end tests with Cypress covering critical paths (browse menu → add to cart → checkout → confirm order) and integrate into CI.
-  

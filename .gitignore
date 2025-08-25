@@ -218,3 +218,7 @@ __marimo__/
 backend/firebase-service-account.json
 **/*service-account*.json
 **/*serviceAccount*.json
+
+# Backend environment files (do not commit)
+backend/.env.dev
+backend/.env.example
