@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Flex,
@@ -8,11 +7,13 @@ import {
   Spacer,
   Icon,
 } from '@chakra-ui/react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
-import { useCart } from '../contexts/CartContext';
+import React from 'react';
 import { useIntl } from 'react-intl';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
+
 import { messages as navMessages } from './messages';
 import { ReactComponent as CartIcon } from '../assets/icons/cart.svg';
+import { useCart } from '../contexts/CartContext';
 
 interface NavLinkProps {
   children: React.ReactNode;

@@ -1,12 +1,14 @@
-import React from 'react';
+import { ChakraProvider } from '@chakra-ui/react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { BrowserRouter } from 'react-router-dom';
+import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { ordersAPI, TOKEN_KEY } from '../../../../services/api';
+import { BrowserRouter } from 'react-router-dom';
+
 import { messages } from '../../../../locales/en';
+import { ordersAPI, TOKEN_KEY } from '../../../../services/api';
 import OrderDetails from '../OrderDetails';
-import { ChakraProvider } from '@chakra-ui/react';
+
 
 jest.mock('../../../../services/api', () => ({
   ordersAPI: {
@@ -296,7 +298,7 @@ describe('OrderDetails', () => {
     const backButton = screen.getByText('Back to Orders');
     await user.click(backButton);
 
-    expect(mockNavigate).toHaveBeenCalledWith('/orders');
+    expect(mockNavigate).toHaveBeenCalledWith('/admin/orders');
   });
 
   it('handles order not found', async () => {
@@ -309,7 +311,7 @@ describe('OrderDetails', () => {
     );
 
     await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/orders');
+      expect(screen.getByText('Order not found')).toBeInTheDocument();
     });
   });
 

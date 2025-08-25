@@ -1,8 +1,9 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { BrowserRouter } from 'react-router-dom';
+import React from 'react';
 import { IntlProvider } from 'react-intl';
+import { BrowserRouter } from 'react-router-dom';
+
 import CartPage from '../CartPage';
 
 jest.mock('../../../contexts/CartContext', () => ({

@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -21,13 +20,15 @@ import {
   Td,
   TableContainer,
 } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
-import { ordersAPI, TOKEN_KEY } from '../../../services/api';
+
 import { messages } from './messages';
-import Pagination from '../../../components/Pagination';
-import { getStatusColor, formatDate } from '../../../utils/orderUtils';
 import LogoutButton from '../../../components/LogoutButton';
+import Pagination from '../../../components/Pagination';
+import { ordersAPI, TOKEN_KEY } from '../../../services/api';
+import { getStatusColor, formatDate } from '../../../utils/orderUtils';
 
 interface Order {
   _id: string;

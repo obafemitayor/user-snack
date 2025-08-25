@@ -1,8 +1,9 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { useToast } from '@chakra-ui/react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ordersAPI } from '../services/api';
+
 import { useCart } from './CartContext';
+import { ordersAPI } from '../services/api';
 
 export interface Extra {
   _id: string;
@@ -40,7 +41,7 @@ interface OrderContextType {
   handleAddExtra: () => void;
   handleRemoveExtra: (extraId: string) => void;
   handleAddToCart: (pizza: any, extras: Extra[]) => void;
-  handlePlaceOrder: (pizza: any, extras: Extra[], calculateTotal: () => number) => Promise<void>;
+  handlePlaceOrder: (pizza: any, _extras: Extra[], calculateTotal: () => number) => Promise<void>;
   resetForm: () => void;
 }
 
@@ -170,7 +171,9 @@ export const OrderProvider: React.FC<OrderProviderProps> = ({ children }) => {
   };
 
   const handleAddToCart = (pizza: any, extras: Extra[]) => {
-    if (!pizza) return;
+    if (!pizza) {
+      return;
+    }
     addItem({
       pizzaId: pizza._id,
       name: pizza.name,
@@ -181,7 +184,9 @@ export const OrderProvider: React.FC<OrderProviderProps> = ({ children }) => {
     });
   };
 
-  const handlePlaceOrder = async (pizza: any, extras: Extra[], calculateTotal: () => number) => {
+  const handlePlaceOrder = async (pizza: any, _extras: Extra[], calculateTotal: () => number) => {
+    void _extras;
+    void calculateTotal;
     const errors = validate(orderForm);
     setOrderErrors(errors);
     if (!pizza || Object.keys(errors).length > 0) {

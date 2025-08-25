@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { DeleteIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -26,11 +26,12 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import { DeleteIcon } from '@chakra-ui/icons';
-import { useCart } from '../../contexts/CartContext';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
+import { Link as RouterLink } from 'react-router-dom';
+
 import { messages } from './messages';
+import { useCart } from '../../contexts/CartContext';
 
 const CartPage: React.FC = () => {
   const { items, removeItem, updateQuantity, getSubtotal, placeOrder } = useCart();

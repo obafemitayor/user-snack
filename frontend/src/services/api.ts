@@ -17,7 +17,9 @@ const getAuthHeaders = () => {
 };
 
 const handleAuthError = (error: any): void => {
-  if (!axios.isAxiosError(error)) return;
+  if (!axios.isAxiosError(error)) {
+    return;
+  }
 
   const status = error.response?.status;
   const isNetwork = error.message === 'Network Error';

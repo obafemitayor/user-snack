@@ -1,9 +1,10 @@
-import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { pizzaAPI } from '../../../services/api';
+import { BrowserRouter } from 'react-router-dom';
+
 import { messages } from '../../../locales/en';
+import { pizzaAPI } from '../../../services/api';
 import PizzaMenuList from '../PizzaMenuList';
 
 jest.mock('../../../services/api', () => ({

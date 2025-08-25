@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -15,10 +14,12 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { authAPI, TOKEN_KEY } from '../../services/api';
+import React, { useState } from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';
+import { useNavigate, useLocation } from 'react-router-dom';
+
 import { messages } from './messages';
+import { authAPI, TOKEN_KEY } from '../../services/api';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');

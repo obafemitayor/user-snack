@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { ArrowBackIcon } from '@chakra-ui/icons';
 import {
   Container,
   Heading,
@@ -15,12 +15,13 @@ import {
   Center,
   
 } from '@chakra-ui/react';
-import { ArrowBackIcon } from '@chakra-ui/icons';
+import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useParams, useNavigate } from 'react-router-dom';
-import { pizzaAPI, extrasAPI } from '../../services/api';
+
 import { messages } from './messages';
 import AddToCart from '../../components/AddToCart';
+import { pizzaAPI, extrasAPI } from '../../services/api';
 
 interface Pizza {
   _id: string;

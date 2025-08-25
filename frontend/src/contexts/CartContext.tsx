@@ -1,9 +1,10 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useToast } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import { ordersAPI } from '../services/api';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useIntl } from 'react-intl';
+import { useNavigate } from 'react-router-dom';
+
 import { messages as ctxMessages } from './messages';
+import { ordersAPI } from '../services/api';
 
 export interface CartExtra {
   _id: string;
@@ -34,19 +35,27 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const useCart = () => {
   const ctx = useContext(CartContext);
-  if (!ctx) throw new Error('useCart must be used within a CartProvider');
+  if (!ctx) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
   return ctx;
 };
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>(() => {
     const STORAGE_KEY_INIT = 'usersnap_cart_v1';
-    if (typeof window === 'undefined') return [];
+    if (typeof window === 'undefined') {
+      return [];
+    }
     try {
       const raw = localStorage.getItem(STORAGE_KEY_INIT);
-      if (!raw) return [];
+      if (!raw) {
+        return [];
+      }
       const parsed = JSON.parse(raw) as unknown;
-      if (!Array.isArray(parsed)) return [];
+      if (!Array.isArray(parsed)) {
+        return [];
+      }
       return (parsed as any[]).map((i) => ({
         id: String(i.id),
         pizzaId: String(i.pizzaId),
@@ -98,8 +107,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const next = prev.filter(i => i.id !== id);
       try {
         if (typeof window !== 'undefined') {
-          if (next.length === 0) localStorage.removeItem(STORAGE_KEY);
-          else localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+          if (next.length === 0) {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          else {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+          }
         }
       } catch {}
       return next;
@@ -110,8 +123,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const next = prev.map(i => (i.id === id ? { ...i, quantity: Math.max(1, quantity) } : i));
       try {
         if (typeof window !== 'undefined') {
-          if (next.length === 0) localStorage.removeItem(STORAGE_KEY);
-          else localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+          if (next.length === 0) {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+          else {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+          }
         }
       } catch {}
       return next;

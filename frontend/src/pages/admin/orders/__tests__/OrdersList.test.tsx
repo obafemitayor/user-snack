@@ -1,12 +1,14 @@
-import React from 'react';
+import { ChakraProvider } from '@chakra-ui/react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { BrowserRouter } from 'react-router-dom';
+import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { ordersAPI, TOKEN_KEY } from '../../../../services/api';
+import { BrowserRouter } from 'react-router-dom';
+
 import { messages } from '../../../../locales/en';
+import { ordersAPI, TOKEN_KEY } from '../../../../services/api';
 import OrdersList from '../OrdersList';
-import { ChakraProvider } from '@chakra-ui/react';
+
 
 jest.mock('../../../../services/api', () => ({
   ordersAPI: {

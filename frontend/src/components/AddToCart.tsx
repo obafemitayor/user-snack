@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { DeleteIcon } from '@chakra-ui/icons';
 import {
   Card,
   CardBody,
@@ -19,11 +19,12 @@ import {
   NumberIncrementStepper,
   NumberDecrementStepper,
 } from '@chakra-ui/react';
+import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
+
 import { useCart } from '../contexts/CartContext';
 import { messages } from '../pages/pizza/messages';
-import { DeleteIcon } from '@chakra-ui/icons';
 
 interface Extra {
   _id: string;
@@ -126,7 +127,9 @@ const AddToCart: React.FC<AddToCartProps> = ({ pizza, extras }) => {
                 <List spacing={2}>
                   {selectedExtraIds.map((id) => {
                     const ex = extras.find((e) => e._id === id);
-                    if (!ex) return null;
+                    if (!ex) {
+                      return null;
+                    }
                     return (
                       <ListItem key={id}>
                         <HStack justify="space-between">

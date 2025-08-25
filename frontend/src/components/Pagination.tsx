@@ -1,4 +1,4 @@
-import React from 'react';
+import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -7,7 +7,7 @@ import {
   Select,
   IconButton,
 } from '@chakra-ui/react';
-import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import React from 'react';
 
 interface PaginationProps {
   currentPage: number;

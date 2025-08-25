@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -16,11 +15,13 @@ import {
   Spinner,
   Center,
 } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
-import { pizzaAPI } from '../../services/api';
-import Pagination from '../../components/Pagination';
+import { useNavigate } from 'react-router-dom';
+
 import { messages } from './messages';
+import Pagination from '../../components/Pagination';
+import { pizzaAPI } from '../../services/api';
 
 interface Pizza {
   _id: string;
@@ -29,13 +30,6 @@ interface Pizza {
   price: number;
   image_url?: string;
   ingredients?: string[];
-}
-
-interface PaginationData {
-  items: Pizza[];
-  page: number;
-  pages: number;
-  total: number;
 }
 
 const PizzaMenuList: React.FC = () => {
@@ -56,7 +50,7 @@ const PizzaMenuList: React.FC = () => {
       setCurrentPage(response.data.page);
       setTotalPages(response.data.pages);
       setTotalItems(response.data.total);
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to load pizzas',

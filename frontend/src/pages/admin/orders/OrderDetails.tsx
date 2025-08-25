@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
 import {
-  Box,
   Container,
   Heading,
   Text,
@@ -10,16 +8,10 @@ import {
   Badge,
   Card,
   CardBody,
-  FormControl,
-  FormLabel,
   Select,
   useToast,
   Spinner,
   Center,
-  Divider,
-  List,
-  ListItem,
-  ListIcon,
   Table,
   Thead,
   Tbody,
@@ -30,12 +22,16 @@ import {
   Alert,
   AlertIcon,
 } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ordersAPI, TOKEN_KEY } from '../../../services/api';
+
 import { messages } from './messages';
-import { getStatusColor, formatDate } from '../../../utils/orderUtils';
 import LogoutButton from '../../../components/LogoutButton';
+import { ordersAPI, TOKEN_KEY } from '../../../services/api';
+import { getStatusColor, formatDate } from '../../../utils/orderUtils';
+
+type Extra = string | { name: string };
 
 interface OrderItem {
   pizza_id: string;
@@ -46,7 +42,7 @@ interface OrderItem {
     price: number;
   };
   quantity: number;
-  extras: any[];
+  extras: Extra[];
   item_total?: number;
   price?: number;
 }
@@ -69,12 +65,10 @@ const OrderDetails: React.FC = () => {
   const navigate = useNavigate();
   const toast = useToast();
   const intl = useIntl();
-  
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [updating, setUpdating] = useState<boolean>(false);
   const [newStatus, setNewStatus] = useState<string>('');
-  const [error, setError] = useState<string>('');
 
   const statusOptions = [
     { value: 'pending', label: 'Pending' },
@@ -95,31 +89,28 @@ const OrderDetails: React.FC = () => {
   }, [id, navigate]);
 
   const fetchOrderDetails = async () => {
-    if (!id) {
-      setError('Order ID is required');
+      if (!id) {
+        setLoading(false);
+        return;
+      }
+      try {
+        setLoading(true);
+        const response = await ordersAPI.getById(id);
+        setOrder(response.data);
+        setNewStatus(response.data.status);
+      } catch (error) {
+        console.error('Error fetching order details:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to load order details',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+      } finally {
       setLoading(false);
-      return;
-    }
-    
-    try {
-      setLoading(true);
-      const response = await ordersAPI.getById(id);
-      setOrder(response.data);
-      setNewStatus(response.data.status);
-    } catch (error) {
-      console.error('Error fetching order details:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to load order details',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-      navigate('/orders');
-    } finally {
-      setLoading(false);
-    }
-  };
+      }
+    };
 
   const handleStatusUpdate = async (newStatus: string) => {
     if (!order || !id || newStatus === order.status) {
@@ -311,8 +302,8 @@ const OrderDetails: React.FC = () => {
                             <Text>
                               {intl.formatMessage(messages.extras, {
                                 extras: item.extras
-                                  .map((extra: any) =>
-                                    typeof extra === 'string' ? extra : extra?.name
+                                  .map((extra: Extra) =>
+                                    typeof extra === 'string' ? extra : extra.name
                                   )
                                   .filter(Boolean)
                                   .join(', '),

@@ -1,11 +1,12 @@
-import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
 import { IntlProvider } from 'react-intl';
 import { MemoryRouter } from 'react-router-dom';
+
 import Login from './Login';
-import { authAPI, TOKEN_KEY } from '../../services/api';
 import { messages as loginMsgs } from './messages';
+import { authAPI, TOKEN_KEY } from '../../services/api';
 
 jest.mock('@chakra-ui/react', () => {
   const React = require('react');

@@ -1,16 +1,17 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
 import { Box } from '@chakra-ui/react';
+import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { messages } from './locales/en';
+import { Routes, Route } from 'react-router-dom';
+
 import Navbar from './components/Navbar';
-import PizzaMenuList from './pages/pizza/PizzaMenuList';
-import PizzaMenuDetails from './pages/pizza/PizzaMenuDetails';
-import OrdersList from './pages/admin/orders/OrdersList';
-import OrderDetails from './pages/admin/orders/OrderDetails';
 import { CartProvider } from './contexts/CartContext';
-import CartPage from './pages/cart/CartPage';
+import { messages } from './locales/en';
+import OrderDetails from './pages/admin/orders/OrderDetails';
+import OrdersList from './pages/admin/orders/OrdersList';
 import Login from './pages/auth/Login';
+import CartPage from './pages/cart/CartPage';
+import PizzaMenuDetails from './pages/pizza/PizzaMenuDetails';
+import PizzaMenuList from './pages/pizza/PizzaMenuList';
 
 const App: React.FC = () => {
   return (

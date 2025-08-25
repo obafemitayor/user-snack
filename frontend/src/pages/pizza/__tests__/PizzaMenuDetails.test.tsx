@@ -1,12 +1,13 @@
-import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { BrowserRouter } from 'react-router-dom';
+import React from 'react';
 import { IntlProvider } from 'react-intl';
-import { pizzaAPI, extrasAPI } from '../../../services/api';
-import { messages } from '../../../locales/en';
-import PizzaMenuDetails from '../PizzaMenuDetails';
+import { BrowserRouter } from 'react-router-dom';
+
 import { CartProvider } from '../../../contexts/CartContext';
+import { messages } from '../../../locales/en';
+import { pizzaAPI, extrasAPI } from '../../../services/api';
+import PizzaMenuDetails from '../PizzaMenuDetails';
 
 jest.mock('../../../services/api', () => ({
   pizzaAPI: {
