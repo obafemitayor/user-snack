@@ -221,7 +221,7 @@ const OrderDetails: React.FC = () => {
                 <VStack align="start" spacing={2} flex={1}>
                   <Text fontWeight="bold">{intl.formatMessage(messages.totalAmountLabel)}</Text>
                   <Badge colorScheme="green" fontSize="lg" p={2}>
-                    ${order.total_amount}
+                    {intl.formatNumber(order.total_amount, { style: 'currency', currency: 'USD' })}
                   </Badge>
                 </VStack>
               </HStack>
@@ -317,7 +317,11 @@ const OrderDetails: React.FC = () => {
                         </Td>
                         <Td>
                           <Text fontWeight="bold">
-                            ${item.item_total ?? item.price ?? intl.formatMessage(messages.priceNotAvailable)}
+                            {item.item_total != null
+                              ? intl.formatNumber(item.item_total, { style: 'currency', currency: 'USD' })
+                              : (item.price != null
+                                  ? intl.formatNumber(item.price, { style: 'currency', currency: 'USD' })
+                                  : intl.formatMessage(messages.priceNotAvailable))}
                           </Text>
                         </Td>
                       </Tr>
