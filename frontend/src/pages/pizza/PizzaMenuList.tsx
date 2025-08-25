@@ -8,7 +8,7 @@ import {
   Image,
   Text,
   Button,
-  HStack,
+  Stack,
   VStack,
   Badge,
   useToast,
@@ -87,10 +87,10 @@ const PizzaMenuList: React.FC = () => {
     <Container maxW="container.xl" py={8}>
       <VStack spacing={8} align="stretch">
         <Box textAlign="center">
-          <Heading as="h1" size="xl" textAlign="center" mb={2}>
+          <Heading as="h1" size={{ base: 'lg', md: 'xl' }} textAlign="center" mb={2}>
           {intl.formatMessage(messages.menuTitle)}
         </Heading>
-        <Text fontSize="lg" color="gray.600" textAlign="center" mb={8}>
+        <Text fontSize={{ base: 'md', md: 'lg' }} color="gray.600" textAlign="center" mb={8}>
           {intl.formatMessage(messages.menuSubtitle)}
         </Text>
         </Box>
@@ -103,7 +103,7 @@ const PizzaMenuList: React.FC = () => {
           </Center>
         ) : (
           <>
-            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={6}>
+            <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={{ base: 4, md: 6 }}>
               {pizzas.map((pizza: Pizza) => (
                 <Card
                   key={pizza._id}
@@ -117,23 +117,23 @@ const PizzaMenuList: React.FC = () => {
                       src={pizza.image_url}
                       alt={pizza.name}
                       borderRadius="md"
-                      h="200px"
+                      h={{ base: '180px', md: '200px' }}
                       w="100%"
                       objectFit="cover"
                       mb={4}
                     />
                     <VStack align="start" spacing={3}>
-                      <HStack justify="space-between" w="100%">
-                        <Heading size="md" color="gray.800">
+                      <Stack direction={{ base: 'column', md: 'row' }} justify="space-between" w="100%" align={{ base: 'flex-start', md: 'center' }}>
+                        <Heading size={{ base: 'sm', md: 'md' }} color="gray.800">
                           {pizza.name}
                         </Heading>
-                        <Badge colorScheme="orange" fontSize="md" p={2}>
+                        <Badge colorScheme="orange" fontSize={{ base: 'sm', md: 'md' }} p={{ base: 1, md: 2 }}>
                           {intl.formatNumber(pizza.price, {
                             style: 'currency',
                             currency: 'USD'
                           })}
                         </Badge>
-                      </HStack>
+                      </Stack>
                       <Text color="gray.600" noOfLines={2}>
                         {pizza.description}
                       </Text>
@@ -146,7 +146,7 @@ const PizzaMenuList: React.FC = () => {
                       )}
                       <Button
                         colorScheme="orange"
-                        size="sm"
+                        size={{ base: 'md', md: 'sm' }}
                         w="100%"
                         onClick={(e: React.MouseEvent) => {
                           e.stopPropagation();

@@ -6,7 +6,8 @@ import {
   CardBody,
   Text,
   Button,
-  HStack,
+
+  Stack,
   VStack,
   Badge,
   useToast,
@@ -110,23 +111,25 @@ const OrdersList: React.FC = () => {
   return (
     <Container maxW="container.xl" py={8}>
       <VStack spacing={8} align="stretch">
-        <HStack justify="space-between" align="center">
+        <Stack direction={{ base: 'column', md: 'row' }} justify="space-between" align={{ base: 'stretch', md: 'center' }}>
           <Box textAlign="left">
-            <Heading as="h1" size="xl" mb={2}>
+            <Heading as="h1" size={{ base: 'lg', md: 'xl' }} mb={2}>
               {intl.formatMessage(messages.listTitle)}
             </Heading>
-            <Text fontSize="lg" color="gray.600" mb={2}>
+            <Text fontSize={{ base: 'md', md: 'lg' }} color="gray.600" mb={2}>
               {intl.formatMessage(messages.listSubtitle)}
             </Text>
           </Box>
-          <LogoutButton />
-        </HStack>
+          <Box>
+            <LogoutButton />
+          </Box>
+        </Stack>
 
         <>
             <Card>
               <CardBody>
-                <TableContainer>
-                  <Table variant="simple">
+                <TableContainer overflowX="auto">
+                  <Table variant="simple" size={{ base: 'sm', md: 'md' }}>
                     <Thead>
                       <Tr>
                         <Th>{intl.formatMessage(messages.tableHeaderOrderId)}</Th>
@@ -163,7 +166,7 @@ const OrdersList: React.FC = () => {
                             </Text>
                           </Td>
                           <Td>
-                            <Badge colorScheme="green" fontSize="md" p={2}>
+                            <Badge colorScheme="green" fontSize={{ base: 'sm', md: 'md' }} p={{ base: 1, md: 2 }}>
                               {intl.formatNumber(order.total_amount, { style: 'currency', currency: 'USD' })}
                             </Badge>
                           </Td>
@@ -182,9 +185,10 @@ const OrdersList: React.FC = () => {
                           </Td>
                           <Td>
                             <Button
-                              size="sm"
+                              size={{ base: 'sm', md: 'md' }}
                               colorScheme="orange"
                               variant="outline"
+                              width={{ base: 'full', md: 'auto' }}
                               onClick={() => handleOrderClick(order._id)}
                             >
                               <Center>

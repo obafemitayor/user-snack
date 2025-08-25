@@ -4,7 +4,8 @@ import {
   Text,
   Button,
   VStack,
-  HStack,
+
+  Stack,
   Badge,
   Card,
   CardBody,
@@ -176,22 +177,23 @@ const OrderDetails: React.FC = () => {
   return (
     <Container maxW="container.lg" py={8}>
       <VStack spacing={8} align="stretch">
-        <HStack justify="space-between" align="center">
+        <Stack direction={{ base: 'column', md: 'row' }} justify="space-between" align={{ base: 'stretch', md: 'center' }}>
           <Button
             variant="ghost"
             alignSelf="flex-start"
             onClick={() => navigate('/admin/orders')}
+            width={{ base: 'full', md: 'auto' }}
           >
             {intl.formatMessage(messages.backToOrders)}
           </Button>
           <LogoutButton />
-        </HStack>
+        </Stack>
 
         <Card>
           <CardBody>
             <VStack spacing={6} align="stretch">
-              <HStack justify="space-between">
-                <Text fontSize="xl" fontWeight="bold">
+              <Stack direction={{ base: 'column', md: 'row' }} justify="space-between" align={{ base: 'stretch', md: 'center' }}>
+                <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">
                   {intl.formatMessage(messages.orderTotal, {
                     total: intl.formatNumber(order.total_amount, {
                       style: 'currency',
@@ -201,15 +203,15 @@ const OrderDetails: React.FC = () => {
                 </Text>
                 <Badge
                   colorScheme={getStatusColor(order.status)}
-                  fontSize="lg"
-                  p={3}
+                  fontSize={{ base: 'sm', md: 'lg' }}
+                  p={{ base: 2, md: 3 }}
                   textTransform="capitalize"
                 >
                   {order.status}
                 </Badge>
-              </HStack>
+              </Stack>
 
-              <HStack spacing={8} align="start">
+              <Stack spacing={{ base: 4, md: 8 }} direction={{ base: 'column', md: 'row' }} align={{ base: 'stretch', md: 'start' }}>
                 <VStack align="start" spacing={2} flex={1}>
                   <Text fontWeight="bold">{intl.formatMessage(messages.orderIdLabel)}</Text>
                   <Text fontFamily="mono">{order._id}</Text>
@@ -220,22 +222,22 @@ const OrderDetails: React.FC = () => {
                 </VStack>
                 <VStack align="start" spacing={2} flex={1}>
                   <Text fontWeight="bold">{intl.formatMessage(messages.totalAmountLabel)}</Text>
-                  <Badge colorScheme="green" fontSize="lg" p={2}>
+                  <Badge colorScheme="green" fontSize={{ base: 'md', md: 'lg' }} p={{ base: 1, md: 2 }}>
                     {intl.formatNumber(order.total_amount, { style: 'currency', currency: 'USD' })}
                   </Badge>
                 </VStack>
-              </HStack>
+              </Stack>
             </VStack>
           </CardBody>
         </Card>
 
         <Card>
           <CardBody>
-            <Heading size="lg" mb={4}>
+            <Heading size={{ base: 'md', md: 'lg' }} mb={4}>
               {intl.formatMessage(messages.customerInfo)}
             </Heading>
             <VStack spacing={4} align="stretch">
-              <HStack spacing={8}>
+              <Stack spacing={{ base: 4, md: 8 }} direction={{ base: 'column', md: 'row' }}>
                 <VStack align="start" spacing={1} flex={1}>
                   <Text fontWeight="bold">{intl.formatMessage(messages.nameLabel)}</Text>
                   <Text>
@@ -254,7 +256,7 @@ const OrderDetails: React.FC = () => {
                     {intl.formatMessage(messages.phone, { phone: order.customer_phone })}
                   </Text>
                 </VStack>
-              </HStack>
+              </Stack>
               
               {order.customer_address && (
                 <VStack align="start" spacing={1}>
@@ -271,11 +273,11 @@ const OrderDetails: React.FC = () => {
         {order.items && order.items.length > 0 && (
           <Card>
             <CardBody>
-              <Heading size="lg" mb={4}>
+              <Heading size={{ base: 'md', md: 'lg' }} mb={4}>
                 {intl.formatMessage(messages.orderItems)}
               </Heading>
-              <TableContainer>
-                <Table variant="simple">
+              <TableContainer overflowX="auto">
+                <Table variant="simple" size={{ base: 'sm', md: 'md' }}>
                   <Thead>
                     <Tr>
                       <Th>{intl.formatMessage(messages.tableHeaderItem)}</Th>
@@ -335,7 +337,7 @@ const OrderDetails: React.FC = () => {
 
         <Card>
           <CardBody>
-            <Heading size="lg" mb={4}>
+            <Heading size={{ base: 'md', md: 'lg' }} mb={4}>
               {intl.formatMessage(messages.orderManagement)}
             </Heading>
             
@@ -351,14 +353,14 @@ const OrderDetails: React.FC = () => {
               </Alert>
             ) : (
               <VStack spacing={4} align="stretch">
-                <HStack spacing={4}>
+                <Stack spacing={4} direction={{ base: 'column', md: 'row' }} align={{ base: 'stretch', md: 'center' }}>
                   <Text fontWeight="bold" mb={2}>
                     {intl.formatMessage(messages.status)}
                   </Text>
                   <Select
                     value={newStatus}
                     onChange={(e) => setNewStatus(e.target.value)}
-                    maxW="200px"
+                    maxW={{ base: 'full', md: '200px' }}
                   >
                     {statusOptions.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -372,10 +374,12 @@ const OrderDetails: React.FC = () => {
                     isLoading={updating}
                     loadingText="Updating..."
                     isDisabled={newStatus === order.status}
+                    width={{ base: 'full', md: 'auto' }}
+                    size={{ base: 'md', md: 'lg' }}
                   >
                     {intl.formatMessage(messages.updateStatus)}
                   </Button>
-                </HStack>
+                </Stack>
                 
                 <Text fontSize="sm" color="gray.600">
                   <Text color="green.500" mr={2}>✓</Text>

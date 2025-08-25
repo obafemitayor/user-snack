@@ -6,7 +6,8 @@ import {
   Text,
   Button,
   VStack,
-  HStack,
+
+  Stack,
   Badge,
   Card,
   CardBody,
@@ -120,22 +121,23 @@ const PizzaMenuDetails: React.FC = () => {
 
         <Card>
           <CardBody>
-            <HStack spacing={8} align="start">
+            <Stack spacing={{ base: 4, md: 8 }} direction={{ base: 'column', md: 'row' }} align={{ base: 'stretch', md: 'start' }}>
               <Image
                 src={pizza.image_url}
                 alt={pizza.name}
                 borderRadius="md"
-                maxW="400px"
-                h="300px"
+                w={{ base: '100%', md: 'auto' }}
+                maxW={{ base: '100%', md: '400px' }}
+                h={{ base: '200px', md: '300px' }}
                 objectFit="cover"
               />
-              
+
               <VStack align="start" spacing={4} flex={1}>
-                <HStack justify="space-between" w="100%">
-                  <Heading size="xl" color="gray.800">
+                <Stack direction={{ base: 'column', md: 'row' }} justify="space-between" w="100%" align={{ base: 'flex-start', md: 'center' }}>
+                  <Heading size={{ base: 'lg', md: 'xl' }} color="gray.800">
                     {pizza.name}
                   </Heading>
-                  <Badge colorScheme="orange" fontSize="lg" p={3}>
+                  <Badge colorScheme="orange" fontSize={{ base: 'md', md: 'lg' }} p={{ base: 2, md: 3 }}>
                     {intl.formatMessage(messages.menuPrice, {
                       price: intl.formatNumber(pizza.price, {
                         style: 'currency',
@@ -143,13 +145,13 @@ const PizzaMenuDetails: React.FC = () => {
                       })
                     })}
                   </Badge>
-                </HStack>
-                
-                <Text fontSize="lg" color="gray.600">
+                </Stack>
+
+                <Text fontSize={{ base: 'md', md: 'lg' }} color="gray.600">
                   {pizza.description}
                 </Text>
               </VStack>
-            </HStack>
+            </Stack>
           </CardBody>
         </Card>
 

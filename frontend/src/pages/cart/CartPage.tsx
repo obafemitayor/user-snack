@@ -6,7 +6,7 @@ import {
   CardBody,
   Container,
   Heading,
-  HStack,
+
   IconButton,
   Input,
   FormControl,
@@ -25,6 +25,7 @@ import {
   Tr,
   Text,
   VStack,
+  TableContainer,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useIntl } from 'react-intl';
@@ -63,7 +64,7 @@ const CartPage: React.FC = () => {
   return (
     <Container maxW="container.lg" py={8}>
       <VStack align="stretch" spacing={6}>
-        <Heading size="lg">{intl.formatMessage(messages.title)}</Heading>
+        <Heading size={{ base: 'md', md: 'lg' }}>{intl.formatMessage(messages.title)}</Heading>
 
         <Card>
           <CardBody>
@@ -74,56 +75,58 @@ const CartPage: React.FC = () => {
               </VStack>
             ) : (
               <Stack spacing={6}>
-                <Table variant="simple">
-                  <Thead>
-                    <Tr>
-                      <Th>{intl.formatMessage(messages.tableItem)}</Th>
-                      <Th>{intl.formatMessage(messages.tableExtras)}</Th>
-                      <Th isNumeric>{intl.formatMessage(messages.tableQty)}</Th>
-                      <Th isNumeric>{intl.formatMessage(messages.tablePrice)}</Th>
-                      <Th></Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {items.map(item => {
-                      const extrasCost = item.extras.reduce((sum, e) => sum + e.price, 0);
-                      const unit = item.price + extrasCost;
-                      const total = unit * item.quantity;
-                      return (
-                        <Tr key={item.id}>
-                          <Td>
-                            <VStack align="start" spacing={0}>
-                              <Text fontWeight="bold">{item.name}</Text>
-                              <Text fontSize="sm" color="gray.500">{intl.formatMessage(messages.each, { price: intl.formatNumber(unit, { style: 'currency', currency: 'USD' }) })}</Text>
-                            </VStack>
-                          </Td>
-                          <Td>
-                            {item.extras.length > 0 ? item.extras.map(e => e.name).join(', ') : '-'}
-                          </Td>
-                          <Td isNumeric>
-                            <NumberInput value={item.quantity} min={1} max={10} size="sm" width="90px"
-                              onChange={(v) => updateQuantity(item.id, parseInt(v) || 1)}>
-                              <NumberInputField />
-                              <NumberInputStepper>
-                                <NumberIncrementStepper />
-                                <NumberDecrementStepper />
-                              </NumberInputStepper>
-                            </NumberInput>
-                          </Td>
-                          <Td isNumeric>{intl.formatNumber(total, { style: 'currency', currency: 'USD' })}</Td>
-                          <Td>
-                            <IconButton aria-label={intl.formatMessage(messages.remove)} icon={<DeleteIcon aria-hidden/>} size="sm" onClick={() => removeItem(item.id)} />
-                          </Td>
-                        </Tr>
-                      );
-                    })}
-                  </Tbody>
-                </Table>
+                <TableContainer overflowX="auto">
+                  <Table variant="simple" size={{ base: 'sm', md: 'md' }}>
+                    <Thead>
+                      <Tr>
+                        <Th>{intl.formatMessage(messages.tableItem)}</Th>
+                        <Th>{intl.formatMessage(messages.tableExtras)}</Th>
+                        <Th isNumeric>{intl.formatMessage(messages.tableQty)}</Th>
+                        <Th isNumeric>{intl.formatMessage(messages.tablePrice)}</Th>
+                        <Th></Th>
+                      </Tr>
+                    </Thead>
+                    <Tbody>
+                      {items.map(item => {
+                        const extrasCost = item.extras.reduce((sum, e) => sum + e.price, 0);
+                        const unit = item.price + extrasCost;
+                        const total = unit * item.quantity;
+                        return (
+                          <Tr key={item.id}>
+                            <Td>
+                              <VStack align="start" spacing={0}>
+                                <Text fontWeight="bold">{item.name}</Text>
+                                <Text fontSize={{ base: 'xs', md: 'sm' }} color="gray.500">{intl.formatMessage(messages.each, { price: intl.formatNumber(unit, { style: 'currency', currency: 'USD' }) })}</Text>
+                              </VStack>
+                            </Td>
+                            <Td>
+                              {item.extras.length > 0 ? item.extras.map(e => e.name).join(', ') : '-'}
+                            </Td>
+                            <Td isNumeric>
+                              <NumberInput value={item.quantity} min={1} max={10} size={{ base: 'sm', md: 'md' }} width={{ base: '80px', md: '90px' }}
+                                onChange={(v) => updateQuantity(item.id, parseInt(v) || 1)}>
+                                <NumberInputField />
+                                <NumberInputStepper>
+                                  <NumberIncrementStepper />
+                                  <NumberDecrementStepper />
+                                </NumberInputStepper>
+                              </NumberInput>
+                            </Td>
+                            <Td isNumeric>{intl.formatNumber(total, { style: 'currency', currency: 'USD' })}</Td>
+                            <Td>
+                              <IconButton aria-label={intl.formatMessage(messages.remove)} icon={<DeleteIcon aria-hidden/>} size={{ base: 'sm', md: 'md' }} onClick={() => removeItem(item.id)} />
+                            </Td>
+                          </Tr>
+                        );
+                      })}
+                    </Tbody>
+                  </Table>
+                </TableContainer>
 
-                <HStack justify="space-between">
-                  <Text fontSize="xl" fontWeight="bold">{intl.formatMessage(messages.subtotal, { price: intl.formatNumber(subtotal, { style: 'currency', currency: 'USD' }) })}</Text>
-                  <Button as={RouterLink} to="/pizzas" variant="ghost">{intl.formatMessage(messages.addMore)}</Button>
-                </HStack>
+                <Stack direction={{ base: 'column', md: 'row' }} justify="space-between" align={{ base: 'stretch', md: 'center' }}>
+                  <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight="bold">{intl.formatMessage(messages.subtotal, { price: intl.formatNumber(subtotal, { style: 'currency', currency: 'USD' }) })}</Text>
+                  <Button as={RouterLink} to="/pizzas" variant="ghost" width={{ base: 'full', md: 'auto' }}>{intl.formatMessage(messages.addMore)}</Button>
+                </Stack>
 
                 <Box>
                   <Heading size="md" mb={4}>{intl.formatMessage(messages.deliveryDetails)}</Heading>
@@ -181,10 +184,12 @@ const CartPage: React.FC = () => {
                   </Stack>
                 </Box>
 
-                <HStack justify="flex-end">
+                <Stack direction={{ base: 'column', md: 'row' }} justify="flex-end">
                   <Button
                     colorScheme="orange"
                     isDisabled={!isValid}
+                    width={{ base: 'full', md: 'auto' }}
+                    size={{ base: 'md', md: 'lg' }}
                     onClick={() => {
                       if (!isValid) {
                         setTouched({
@@ -200,7 +205,7 @@ const CartPage: React.FC = () => {
                   >
                     {intl.formatMessage(messages.placeOrder)}
                   </Button>
-                </HStack>
+                </Stack>
               </Stack>
             )}
           </CardBody>
