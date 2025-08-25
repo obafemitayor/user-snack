@@ -42,7 +42,6 @@ class OrderService:
             "customer_address": order_data.get("customer_address"),
             "customer_phone": order_data.get("customer_phone"),
             "items": processed_items,
-            # store as rounded float for response/compat; computation uses Decimal
             "total_amount": float(total_amount.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)),
             "status": OrderStatus.PENDING,
             "created_at": datetime.utcnow(),
