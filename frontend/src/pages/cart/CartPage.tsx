@@ -52,7 +52,12 @@ const CartPage: React.FC = () => {
 
   const isEmpty = (v: string) => v.trim().length === 0;
   const isValidEmail = (v: string) => /.+@.+\..+/.test(v.trim());
-  const isValidPhone = (v: string) => /^\+?\d+$/.test(v.trim());
+  const isValidPhone = (v: string) => {
+    const trimmed = v.trim();
+    const formatOk = /^\+?\d+$/.test(trimmed);
+    const digitsOnly = trimmed.replace(/\D/g, '');
+    return formatOk && digitsOnly.length >= 10;
+  };
   const isValid =
     !isEmpty(customer.customer_name) &&
     !isEmpty(customer.customer_email) && isValidEmail(customer.customer_email) &&

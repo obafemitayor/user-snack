@@ -20,5 +20,5 @@ export const messages = defineMessages({
   placeOrder: { id: 'Cart.place_order', defaultMessage: 'Place Order' },
   required: { id: 'Cart.required', defaultMessage: 'This field is required' },
   invalidEmail: { id: 'Cart.invalid_email', defaultMessage: 'Please enter a valid email address' },
-  invalidPhone: { id: 'Cart.invalid_phone', defaultMessage: 'Please enter a valid phone number' },
+  invalidPhone: { id: 'Cart.invalid_phone', defaultMessage: 'Please enter a valid phone number with at least 10 digits' },
 })
