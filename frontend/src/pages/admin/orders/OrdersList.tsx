@@ -122,20 +122,7 @@ const OrdersList: React.FC = () => {
           <LogoutButton />
         </HStack>
 
-        {orders.length === 0 ? (
-          <Center h="200px">
-            <Text fontSize="lg" textAlign="center">
-            {intl.formatMessage(messages.listEmpty)}
-          </Text>
-            <Button
-                colorScheme="orange"
-                onClick={() => navigate('/pizzas')}
-              >
-                {intl.formatMessage(messages.browseMenu)}
-              </Button>
-          </Center>
-        ) : (
-          <>
+        <>
             <Card>
               <CardBody>
                 <TableContainer>
@@ -220,7 +207,6 @@ const OrdersList: React.FC = () => {
               onPageChange={handlePageChange}
             />
           </>
-        )}
       </VStack>
     </Container>
   );

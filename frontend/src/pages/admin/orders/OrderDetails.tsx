@@ -52,7 +52,7 @@ interface Order {
   customer_name: string;
   customer_email: string;
   customer_phone: string;
-  delivery_address: string;
+  customer_address?: string;
   status: string;
   total_amount: number;
   created_at: string;
@@ -256,11 +256,11 @@ const OrderDetails: React.FC = () => {
                 </VStack>
               </HStack>
               
-              {order.delivery_address && (
+              {order.customer_address && (
                 <VStack align="start" spacing={1}>
                   <Text fontWeight="bold">{intl.formatMessage(messages.deliveryAddressLabel)}</Text>
                   <Text>
-                    {intl.formatMessage(messages.address, { address: order.delivery_address })}
+                    {intl.formatMessage(messages.address, { address: order.customer_address })}
                   </Text>
                 </VStack>
               )}

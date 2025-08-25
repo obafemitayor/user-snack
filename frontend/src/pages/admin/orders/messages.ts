@@ -202,10 +202,6 @@ export const messages = defineMessages({
     id: 'orders.tableHeaderPrice',
     defaultMessage: 'Price',
   },
-  browseMenu: {
-    id: 'orders.browseMenu',
-    defaultMessage: 'Browse Menu',
-  },
   unknownPizza: {
     id: 'orders.unknownPizza',
     defaultMessage: 'Unknown Pizza',

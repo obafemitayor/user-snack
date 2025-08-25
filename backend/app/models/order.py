@@ -50,6 +50,7 @@ class Order(BaseModel):
     user_id: str  # Foreign key to User
     customer_name: str
     customer_email: str
+    customer_phone: Optional[str] = None
     customer_address: str
     items: List[OrderItem]
     total_amount: float
