@@ -1,6 +1,7 @@
 from typing import List, Optional
 from bson import ObjectId
 from app.models.extra import Extra
+from pymongo.errors import DuplicateKeyError
 
 class ExtrasService:
     def __init__(self, database):
@@ -12,7 +13,10 @@ class ExtrasService:
             raise ValueError("Extra with this name already exists")
 
         extra_data["available"] = True
-        result = await self.database.extras.insert_one(extra_data)
+        try:
+            result = await self.database.extras.insert_one(extra_data)
+        except DuplicateKeyError:
+            raise ValueError("Extra with this name already exists")
         extra_data["_id"] = result.inserted_id
         return Extra(**extra_data)
     

@@ -5,6 +5,7 @@ from app.models.user import User
 import os
 import hashlib
 import secrets
+from pymongo.errors import DuplicateKeyError
 
 class UserService:
     def __init__(self, database, client=None):
@@ -31,8 +32,10 @@ class UserService:
             password_hash, password_salt = self.get_hashed_password(raw_password)
             user_data["password_hash"] = password_hash
             user_data["password_salt"] = password_salt
-
-        result = await self.database.users.insert_one(user_data)
+        try:
+            result = await self.database.users.insert_one(user_data)
+        except DuplicateKeyError:
+            raise ValueError("User with this email already exists")
         user_data["_id"] = result.inserted_id
         return User(**user_data)
     
@@ -78,24 +81,19 @@ class UserService:
     
     async def get_or_create_user(self, order_data: dict, session=None) -> tuple[str, str]:
         email = order_data.get("customer_email")
-        if email:
-            user = await self.database.users.find_one({"email": email}, session=session)
-            if user:
-                return str(user["_id"]), email
-        
-        generated_email = email or f"guest_{datetime.utcnow().timestamp()}@usersnack.com"
-        user_dict = {
+        existing = await self.get_user_by_email(email)
+        if existing:
+            return str(existing.id), email
+        new_user = await self.create_user({
             "name": order_data["customer_name"],
-            "email": generated_email,
+            "email": email,
             "phone": order_data.get("customer_phone"),
             "address": order_data["customer_address"],
             "created_at": datetime.utcnow(),
             "updated_at": datetime.utcnow(),
-            "active": True
-        }
-        
-        result = await self.database.users.insert_one(user_dict, session=session)
-        return str(result.inserted_id), generated_email
+            "active": True,
+        })
+        return str(new_user.id), email
     
     async def update_user(self, user_id: str, update_data: dict) -> Optional[User]:
         await self.database.users.update_one(

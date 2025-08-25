@@ -1,6 +1,7 @@
 from typing import List, Optional
 from bson import ObjectId
 from app.models.pizza import Pizza
+from pymongo.errors import DuplicateKeyError
 
 class PizzaService:
     def __init__(self, database):
@@ -11,7 +12,10 @@ class PizzaService:
         if existing:
             raise ValueError("Pizza with this name already exists")
         pizza_data["available"] = pizza_data.get("available", True)
-        result = await self.database.pizzas.insert_one(pizza_data)
+        try:
+            result = await self.database.pizzas.insert_one(pizza_data)
+        except DuplicateKeyError:
+            raise ValueError("Pizza with this name already exists")
         pizza_data["_id"] = result.inserted_id
         return Pizza(**pizza_data)
     

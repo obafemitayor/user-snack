@@ -47,8 +47,8 @@ class JWTAuthMiddleware:
                 if not user_id:
                     raise JWTError("Invalid token payload")
                 
-                # Add user_id to request state for use in endpoints
-                scope["state"] = {"user_id": user_id}
+                # Add user_id to request state without overwriting existing State object
+                request.state.user_id = user_id
                 
             except JWTError:
                 response = JSONResponse(
