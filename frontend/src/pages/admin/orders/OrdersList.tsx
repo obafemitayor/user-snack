@@ -35,7 +35,7 @@ interface Order {
   customer_name: string;
   customer_email: string;
   customer_phone: string;
-  delivery_address: string;
+  customer_address: string;
   status: string;
   total_amount: number;
   created_at: string;
@@ -164,7 +164,7 @@ const OrdersList: React.FC = () => {
                           </Td>
                           <Td>
                             <Badge colorScheme="green" fontSize="md" p={2}>
-                              ${order.total_amount}
+                              {intl.formatNumber(order.total_amount, { style: 'currency', currency: 'USD' })}
                             </Badge>
                           </Td>
                           <Td>

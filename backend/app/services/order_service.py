@@ -1,6 +1,7 @@
 from typing import List, Optional
 from bson import ObjectId
 from datetime import datetime
+from decimal import Decimal, ROUND_HALF_UP
 from app.models.order import Order, OrderItem, OrderStatus
 from app.models.user import User
 from app.models.pizza import Pizza
@@ -27,7 +28,7 @@ class OrderService:
         user_service = UserService(self.database, self.client)
         user_id, customer_email = await user_service.get_or_create_user(order_data, session)
         processed_items = []
-        total_amount = 0
+        total_amount = Decimal("0.00")
 
         for item_data in order_data["items"]:
             order_item, item_total = await self._process_order_item(item_data, session)
@@ -41,7 +42,8 @@ class OrderService:
             "customer_address": order_data.get("customer_address"),
             "customer_phone": order_data.get("customer_phone"),
             "items": processed_items,
-            "total_amount": total_amount,
+            # store as rounded float for response/compat; computation uses Decimal
+            "total_amount": float(total_amount.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)),
             "status": OrderStatus.PENDING,
             "created_at": datetime.utcnow(),
             "updated_at": datetime.utcnow()
@@ -50,31 +52,33 @@ class OrderService:
         order_dict["_id"] = result.inserted_id
         return Order(**order_dict)
     
-    async def _process_order_item(self, item_data: dict, session=None) -> tuple[OrderItem, float]:
+    async def _process_order_item(self, item_data: dict, session=None) -> tuple[OrderItem, Decimal]:
         pizza = await self.database.pizzas.find_one({"_id": ObjectId(item_data["pizza_id"])}, session=session)
         if not pizza:
             raise ValueError(f"Pizza with id {item_data['pizza_id']} not found")
         
         quantity = item_data.get("quantity", 1)
-        item_total = pizza["price"] * quantity
+        pizza_price = Decimal(str(pizza["price"]))
+        item_total = pizza_price * Decimal(quantity)
         
         extras, extras_cost = await self._process_extras(item_data.get("extras", []), quantity, session)
         item_total += extras_cost
+        item_total = item_total.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
         
         order_item = OrderItem(
             pizza_id=item_data["pizza_id"],
             pizza_name=pizza["name"],
-            pizza_price=pizza["price"],
+            pizza_price=float(pizza_price.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)),
             extras=extras,
             quantity=quantity,
-            item_total=item_total
+            item_total=float(item_total)
         )
         
         return order_item, item_total
     
-    async def _process_extras(self, extras_data: list, quantity: int, session=None) -> tuple[list, float]:
+    async def _process_extras(self, extras_data: list, quantity: int, session=None) -> tuple[list, Decimal]:
         extras = []
-        extras_cost = 0
+        extras_cost = Decimal("0.00")
         for extra_data in extras_data:
             if isinstance(extra_data, str):
                 extra_id = extra_data
@@ -90,7 +94,9 @@ class OrderService:
                     "name": extra["name"],
                     "price": extra["price"]
                 })
-                extras_cost += extra["price"] * extra_quantity * quantity
+                price = Decimal(str(extra["price"]))
+                extras_cost += price * Decimal(extra_quantity) * Decimal(quantity)
+        extras_cost = extras_cost.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
         return extras, extras_cost
     
     async def get_all_orders(self, skip: int = 0, limit: int = 10) -> tuple[List[Order], int]:
